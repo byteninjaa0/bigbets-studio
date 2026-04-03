@@ -449,7 +449,8 @@ export default function BookingPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentModalOpen(true)}
-                    className="btn-primary w-full justify-center py-4 text-base"
+                    disabled={!item.date || !item.timeSlot}
+                    className="btn-primary w-full justify-center py-4 text-base disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <CreditCard className="w-5 h-5" />
                     Proceed to payment
@@ -493,7 +494,7 @@ export default function BookingPage() {
 
       </AnimatePresence>
 
-      {item && (
+      {item && item.date && item.timeSlot && (
         <MockPaymentModal
           open={paymentModalOpen}
           onOpenChange={setPaymentModalOpen}

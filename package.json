@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && cross-env NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
@@ -52,6 +52,7 @@
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.0.1",
+    "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
