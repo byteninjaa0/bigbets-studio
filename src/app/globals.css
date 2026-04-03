@@ -1,0 +1,427 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 7%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 7%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 0 0% 12%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 0% 40%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 6% 16%;
+  --input: 240 6% 16%;
+  --ring: 0 0% 100%;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth overflow-x-hidden antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    /* ~+2pt vs typical 16px browser default (16px × 14/12 ≈ 18.67px) — scales all rem-based Tailwind type */
+    font-size: 116.7%;
+  }
+
+  body {
+    @apply min-h-screen bg-canvas text-foreground font-sans overflow-x-hidden text-base;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-sans text-white;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    @apply font-sans;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Glass — monochrome */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-gold,
+.glass-muted {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient text — grayscale */
+.text-gradient-gold {
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-white {
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.65) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-gold,
+.glow-subtle {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.glow-gold-sm {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.text-glow-gold {
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.15);
+}
+
+/* Layout utility — use with PageContainer component for consistency */
+.page-container {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Buttons — uniform touch height, premium hover */
+.btn-primary {
+  @apply relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-zinc-600 bg-black px-6 py-3 text-sm font-semibold text-white transition-all duration-200 sm:min-h-12 sm:px-8 sm:py-3.5 sm:text-base;
+}
+
+.btn-primary:hover {
+  @apply scale-[1.02] border-zinc-500 bg-zinc-950;
+}
+
+.btn-primary:active {
+  @apply scale-[0.98];
+}
+
+.btn-outline {
+  @apply relative inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-zinc-600 bg-transparent px-6 py-3 text-sm font-medium text-white transition-all duration-200 sm:min-h-12 sm:px-8 sm:py-3.5;
+}
+
+.btn-outline:hover {
+  @apply scale-[1.02] border-zinc-400 bg-zinc-900;
+}
+
+.btn-outline:active {
+  @apply scale-[0.98];
+}
+
+.btn-ghost {
+  @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 font-medium rounded-lg transition-all duration-200 text-zinc-300;
+}
+
+.btn-ghost:hover {
+  @apply bg-zinc-900 text-white;
+}
+
+/* Cards */
+.card-dark {
+  background: #0a0a0a;
+  border: 1px solid #27272a;
+  border-radius: 1.25rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.card-dark:hover {
+  @apply border-zinc-600;
+  background: #111111;
+  transform: translateY(-1px);
+}
+
+.card-package {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 1px solid #27272a;
+  background: #0a0a0a;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.card-package.popular {
+  @apply border-zinc-500;
+}
+
+.card-package:hover {
+  @apply border-zinc-500;
+  background: #111111;
+  transform: translateY(-2px);
+}
+
+/* Inputs */
+.input-dark {
+  @apply w-full rounded-xl px-5 py-3.5 text-[0.9375rem] text-white transition-all duration-200;
+  background: #0a0a0a;
+  border: 1px solid #27272a;
+}
+
+.input-dark::placeholder {
+  @apply text-zinc-500;
+}
+
+.input-dark:focus {
+  outline: none;
+  border-color: #52525b;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+.input-dark:focus-visible {
+  @apply ring-2 ring-zinc-500/40 ring-offset-2 ring-offset-black;
+}
+
+/* Dark map embed (replaces inline iframe filter) */
+.map-iframe-dark {
+  border: 0;
+  filter: invert(92%) hue-rotate(180deg) contrast(88%);
+}
+
+/* Noise overlay */
+.noise-overlay {
+  position: relative;
+}
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
+}
+
+.animated-bg {
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 80% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+    #000000;
+}
+
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Slot button */
+.slot-btn {
+  @apply relative flex flex-col items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer text-sm font-medium;
+  padding: 0.625rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: #27272a;
+  color: #a1a1aa;
+}
+
+.slot-btn:hover:not(:disabled) {
+  @apply border-zinc-500 bg-zinc-900 text-white;
+}
+
+.slot-btn.selected {
+  @apply border-white bg-zinc-800 text-white;
+}
+
+.slot-btn.booked {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: #18181b;
+  color: rgba(255, 255, 255, 0.25);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Badges — monochrome */
+.badge-fire,
+.badge-popular,
+.badge-premium {
+  @apply text-xs font-semibold tracking-wide px-2.5 py-1 rounded-full;
+  background: #27272a;
+  color: #fafafa;
+  border: 1px solid #3f3f46;
+}
+
+.float-element {
+  animation: float 6s ease-in-out infinite;
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.12);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.section-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #52525b, transparent);
+  margin: 0 auto 2rem;
+  border-radius: 2px;
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+}
+
+/* React Day Picker */
+.rdp-day_selected .rdp-day_button {
+  background: #fafafa !important;
+  color: #000000 !important;
+}
+.rdp-day_today .rdp-day_button {
+  border: 1px solid #52525b !important;
+}
+.rdp {
+  --rdp-accent-color: #fafafa;
+  --rdp-background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* WhatsApp float — monochrome shell (brand icon only) */
+.whatsapp-float {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #000000;
+  border: 1px solid #3f3f46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.whatsapp-float:hover {
+  @apply border-zinc-400 bg-zinc-950;
+}
+
+.countdown-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid #27272a;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 600;
+  color: #fafafa;
+  font-size: 1.25rem;
+}
+
+.hero-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255, 255, 255, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 90% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 30% at 10% 70%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+    #000000;
+}
+
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3f3f46;
+  transition: all 0.2s ease;
+}
+.step-dot.active {
+  background: #fafafa;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+  width: 24px;
+  border-radius: 5px;
+}
+
+.Toaster {
+  font-family: var(--font-sans), sans-serif !important;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.4s ease-out;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+  }
+}

@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuthProvider {
+  credentials
+  google
+}
+
+enum PackageType {
+  SET_A
+  SET_B
+  SET_C
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum DiscountType {
+  percentage
+  flat
+}
+
+enum OtpPurpose {
+  registration
+  login
+  reset
+}
+
+model User {
+  id              String         @id @default(cuid())
+  name            String
+  email           String         @unique
+  password        String?
+  authProvider    AuthProvider   @default(credentials)
+  image           String?
+  phone           String?
+  isEmailVerified Boolean        @default(false)
+  isAdmin         Boolean        @default(false)
+  referralCode    String?        @unique
+  referredBy      String?
+  couponUsed      String[]       @default([])
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  bookings        Booking[]
+}
+
+model Booking {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userName        String
+  userEmail       String
+  userPhone       String?
+  package         PackageType
+  packageName     String
+  date            DateTime
+  timeSlot        String
+  duration        Float          @default(1)
+  amount          Int
+  originalAmount  Int
+  discountApplied Int            @default(0)
+  couponCode      String?
+  status          BookingStatus  @default(pending)
+  paymentId       String?
+  paymentOrderId  String?
+  paymentStatus   PaymentStatus  @default(pending)
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  slot            Slot?
+
+  @@index([userId])
+}
+
+model Slot {
+  id             String   @id @default(cuid())
+  date           String
+  time           String
+  isBooked       Boolean  @default(false)
+  isBlocked      Boolean  @default(false)
+  bookingId      String?  @unique
+  booking        Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  blockedReason  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([date, time])
+}
+
+model Coupon {
+  id                 String       @id @default(cuid())
+  code               String       @unique
+  discountType       DiscountType
+  discountValue      Int
+  maxUses            Int          @default(100)
+  usedCount          Int          @default(0)
+  minAmount          Int          @default(0)
+  expiresAt          DateTime
+  isActive           Boolean      @default(true)
+  applicablePackages String[]     @default([])
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+}
+
+model Otp {
+  id        String     @id @default(cuid())
+  email     String
+  otpHash   String
+  purpose   OtpPurpose
+  attempts  Int        @default(0)
+  expiresAt DateTime
+  isUsed    Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([email, purpose])
+}
+
+// One-time token after OTP verify; exchanged for NextAuth session (hashed at rest).
+model EmailLoginToken {
+  id        String   @id @default(cuid())
+  email     String
+  tokenHash String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
