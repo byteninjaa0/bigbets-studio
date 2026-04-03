@@ -205,6 +205,9 @@
 
 .input-dark::placeholder {
   @apply text-zinc-500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .input-dark:disabled {

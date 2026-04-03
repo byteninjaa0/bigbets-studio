@@ -17,7 +17,8 @@ export const FieldInput = forwardRef<HTMLInputElement, FieldInputProps>(function
   ref
 ) {
   const inputClass = cn(
-    'input-dark w-full text-[0.9375rem] text-white placeholder:text-zinc-500',
+    'input-dark w-full min-w-0 text-[0.9375rem] text-white placeholder:text-zinc-500',
+    'whitespace-nowrap [text-wrap:nowrap]',
     Icon && '!pl-11 pr-4 sm:!pr-5',
     className
   );

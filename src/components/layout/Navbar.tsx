@@ -83,9 +83,10 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed left-0 right-0 top-0 z-50 transition-all duration-200',
-        'bg-black',
-        scrolled && 'border-b border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.45)] backdrop-blur-md'
+        'fixed left-0 right-0 top-0 z-[100] transition-[box-shadow,border-color] duration-200',
+        /* Solid bar at all scroll positions — avoids mobile bugs where backdrop-blur thins perceived opacity */
+        'border-b border-zinc-900 bg-zinc-950',
+        scrolled && 'border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.65)]'
       )}
     >
       <PageContainer>
@@ -120,8 +121,8 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Actions */}
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          {/* Actions — isolate above page content; hamburger stays high-contrast on scroll */}
+          <div className="relative z-[1] flex shrink-0 items-center gap-2 sm:gap-3">
             {item && (
               <Link
                 href="/booking"
@@ -234,12 +235,12 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/15 bg-zinc-950 transition-all duration-200 hover:bg-zinc-900 md:hidden"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/25 bg-black text-white shadow-[0_1px_0_rgba(255,255,255,0.06)] transition-all duration-200 hover:border-white/40 hover:bg-zinc-900 md:hidden"
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
             >
-              <Menu className="h-5 w-5 text-white" />
+              <Menu className="h-5 w-5 shrink-0 text-white" strokeWidth={2.25} aria-hidden />
             </button>
           </div>
         </nav>
@@ -254,7 +255,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[105] bg-black/85 backdrop-blur-sm md:hidden"
               aria-label="Close menu"
               onClick={closeMobile}
             />
@@ -264,7 +265,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed bottom-0 right-0 top-0 z-[70] flex w-[min(100%,22rem)] flex-col border-l border-white/10 bg-black shadow-2xl md:hidden"
+              className="fixed bottom-0 right-0 top-0 z-[110] flex w-[min(100%,22rem)] flex-col border-l border-white/10 bg-zinc-950 shadow-2xl md:hidden"
               role="dialog"
               aria-modal="true"
               aria-labelledby="mobile-nav-title"

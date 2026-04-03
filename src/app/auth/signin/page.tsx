@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FieldInput } from '@/components/ui/field-input';
 import { apiMessage } from '@/lib/api-message';
+import { cn } from '@/lib/utils';
 
 type VerifyOtpResponse = {
   success?: boolean;
@@ -279,27 +280,34 @@ function SignInPageInner() {
                   Enter the code sent to <span className="text-white/80 font-medium">{email}</span>
                 </p>
                 <div
-                  className="flex flex-wrap justify-center gap-2 sm:gap-2.5"
+                  className="mx-auto w-full max-w-full px-0 sm:px-1"
                   onPaste={handleOtpPaste}
                   role="group"
                   aria-label="One-time code"
                 >
-                  {otp.map((digit, i) => (
-                    <input
-                      key={i}
-                      id={`otp-${i}`}
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(ev) => handleOtpChange(i, ev.target.value)}
-                      onKeyDown={(ev) => handleOtpKeyDown(i, ev)}
-                      className="input-dark !min-h-[3rem] !w-11 !px-0 !py-0 text-center text-xl font-mono font-bold sm:!w-12 sm:text-2xl"
-                      disabled={verifying}
-                      aria-label={`Digit ${i + 1}`}
-                    />
-                  ))}
+                  {/* Single row: grid avoids flex-wrap pushing digits to a second line on narrow viewports */}
+                  <div className="grid w-full grid-cols-6 gap-1.5 sm:mx-auto sm:max-w-[21rem] sm:gap-2">
+                    {otp.map((digit, i) => (
+                      <input
+                        key={i}
+                        id={`otp-${i}`}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(ev) => handleOtpChange(i, ev.target.value)}
+                        onKeyDown={(ev) => handleOtpKeyDown(i, ev)}
+                        className={cn(
+                          'input-dark box-border !min-h-[2.75rem] !min-w-0 w-full !px-0 !py-0 text-center font-mono font-bold leading-none',
+                          'text-lg tabular-nums sm:!min-h-[3rem] sm:text-xl',
+                          'whitespace-nowrap [text-wrap:nowrap]'
+                        )}
+                        disabled={verifying}
+                        aria-label={`Digit ${i + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <Button
                   type="button"
