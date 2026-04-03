@@ -45,10 +45,10 @@ export default function Footer() {
             <h4 className="text-white/60 text-xs font-bold uppercase tracking-widest mb-5">Quick Links</h4>
             <ul className="space-y-3">
               {[
-                { label: 'Packages', href: '/#packages' },
-                { label: 'How It Works', href: '/#how-it-works' },
-                { label: 'Testimonials', href: '/#testimonials' },
-                { label: 'Contact', href: '/#contact' },
+                { label: 'Home', href: '/' },
+                { label: 'Studio', href: '/studio' },
+                { label: 'Pricing', href: '/pricing' },
+                { label: 'Contact', href: '/contact' },
                 { label: 'Book Now', href: siteConfig.urls.booking },
                 { label: 'Dashboard', href: '/dashboard' },
               ].map((link) => (
