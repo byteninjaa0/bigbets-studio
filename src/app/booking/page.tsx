@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { apiMessage } from '@/lib/api-message';
 import { MockPaymentModal } from '@/components/booking/MockPaymentModal';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { FieldInput } from '@/components/ui/field-input';
 
 type Step = 'package' | 'datetime' | 'checkout' | 'success';
 
@@ -388,19 +389,26 @@ export default function BookingPage() {
                   <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
                     <Tag className="w-4 h-4 text-zinc-400" /> Have a Coupon?
                   </h3>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Enter coupon code"
-                      value={couponCode}
-                      onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
-                      className="input-dark flex-1 font-mono tracking-widest text-sm py-3"
-                      disabled={!!couponResult}
-                    />
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+                    <div className="min-w-0 flex-1">
+                      <FieldInput
+                        type="text"
+                        icon={Tag}
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value.toUpperCase());
+                          setCouponResult(null);
+                        }}
+                        className="font-mono tracking-widest text-sm"
+                        disabled={!!couponResult}
+                      />
+                    </div>
                     <button
+                      type="button"
                       onClick={applyCoupon}
                       disabled={!couponCode || couponLoading || !!couponResult}
-                      className="px-5 py-3 rounded-xl border border-zinc-500/30 text-zinc-400 hover:bg-zinc-500/10 text-sm font-medium transition-all duration-200 disabled:opacity-40 whitespace-nowrap"
+                      className="min-h-[3rem] shrink-0 px-5 rounded-xl border border-zinc-500/30 text-zinc-400 hover:bg-zinc-500/10 text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
                     >
                       {couponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : couponResult ? '✓ Applied' : 'Apply'}
                     </button>

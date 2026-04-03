@@ -1,26 +1,31 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 /**
- * Post-login landing: OAuth returns here with session cookie set, then we route by role.
- * Avoids relying on OAuth callbackUrl alone (admin vs user).
+ * Post-login landing (e.g. OAuth): session cookie is set, then we route by role.
+ * Refetches session once before deciding, so we don’t bounce to sign-in on a stale client cache.
  */
 function AuthContinueInner() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const params = useSearchParams();
   const nextRaw = params.get('next');
+  const [refetchDone, setRefetchDone] = useState(false);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[auth/continue]', { status, hasSession: !!session, isAdmin: session?.user?.isAdmin });
-    }
+    void update().finally(() => setRefetchDone(true));
+  }, [update]);
 
-    if (status === 'loading') return;
+  useEffect(() => {
+    if (!refetchDone || status === 'loading') return;
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[auth/continue]', { status, hasSession: Boolean(session?.user), isAdmin: session?.user?.isAdmin });
+    }
 
     if (status === 'unauthenticated') {
       if (process.env.NODE_ENV === 'development') {
@@ -32,7 +37,6 @@ function AuthContinueInner() {
 
     if (status === 'authenticated' && session?.user) {
       const isAdmin = Boolean(session.user.isAdmin);
-      // Admins always land on /admin; users default to /dashboard or safe ?next= path
       let dest = isAdmin ? '/admin' : '/dashboard';
 
       if (!isAdmin && nextRaw && nextRaw.startsWith('/') && !nextRaw.startsWith('//')) {
@@ -46,7 +50,7 @@ function AuthContinueInner() {
       }
       router.replace(dest);
     }
-  }, [status, session, router, nextRaw]);
+  }, [refetchDone, status, session, router, nextRaw]);
 
   return (
     <div className="min-h-screen animated-bg flex items-center justify-center">

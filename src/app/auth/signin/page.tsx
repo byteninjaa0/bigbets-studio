@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState, useCallback } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, getSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, ArrowRight, Loader2, RefreshCw } from 'lucide-react';
@@ -10,14 +10,24 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FieldInput } from '@/components/ui/field-input';
 import { apiMessage } from '@/lib/api-message';
 
-function buildContinuePath(searchParams: URLSearchParams) {
-  const next = searchParams.get('callbackUrl');
-  if (next && next.startsWith('/') && !next.startsWith('//')) {
-    return `/auth/continue?next=${encodeURIComponent(next)}`;
+type VerifyOtpResponse = {
+  success?: boolean;
+  loginToken?: string;
+  message?: string;
+  error?: string;
+  isNewUser?: boolean;
+};
+
+function resolvePostLoginPath(params: URLSearchParams, isAdmin: boolean): string {
+  if (isAdmin) return '/admin';
+  const next = params.get('callbackUrl');
+  if (next && next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/admin')) {
+    return next;
   }
-  return '/auth/continue';
+  return '/dashboard';
 }
 
 type Step = 'email' | 'otp';
@@ -106,35 +116,71 @@ function SignInPageInner() {
 
     setVerifying(true);
     try {
-      const { data } = await axios.post<{
-        success?: boolean;
-        loginToken?: string;
-        message?: string;
-      }>('/api/auth/verify-otp', {
+      const { data } = await axios.post<VerifyOtpResponse>('/api/auth/verify-otp', {
         email: e,
         otp: code,
         ...(registerMode && displayName.trim() ? { name: displayName.trim() } : {}),
       });
 
-      if (!data?.loginToken) {
-        toast.error('Invalid or expired OTP');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[signin] verify-otp response', {
+          success: data?.success,
+          hasToken: Boolean(data?.loginToken),
+          isNewUser: data?.isNewUser,
+        });
+      }
+
+      if (data?.success === false || !data?.loginToken) {
+        toast.error(apiMessage(data, 'Invalid or expired OTP'));
+        setOtp(['', '', '', '', '', '']);
+        document.getElementById('otp-0')?.focus();
         return;
       }
 
-      const res = await signIn('email-otp', {
+      const signInRes = await signIn('email-otp', {
         email: e,
         otpLoginToken: data.loginToken,
         redirect: false,
       });
 
-      if (res?.error) {
+      if (signInRes?.error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[signin] signIn error', signInRes.error);
+        }
+        toast.error('Session could not be started. Try again.');
+        return;
+      }
+
+      let session = await getSession();
+      if (!session) {
+        await new Promise((r) => setTimeout(r, 150));
+        session = await getSession();
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[signin] post signIn getSession', { hasSession: Boolean(session?.user) });
+      }
+
+      if (!session?.user) {
         toast.error('Session could not be started. Try again.');
         return;
       }
 
       toast.success('Signed in');
-      router.push(buildContinuePath(params));
-      router.refresh();
+
+      const dest = resolvePostLoginPath(params, Boolean(session.user.isAdmin));
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[signin] redirect →', dest);
+      }
+
+      try {
+        router.refresh();
+      } catch {
+        /* ignore */
+      }
+
+      window.location.assign(dest);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         toast.error(apiMessage(err.response?.data, 'Invalid or expired OTP'));
@@ -148,6 +194,7 @@ function SignInPageInner() {
     }
   };
 
+  const otpComplete = otp.join('').length === 6;
   const variants = {
     enter: { opacity: 0, x: 16 },
     center: { opacity: 1, x: 0 },
@@ -190,30 +237,27 @@ function SignInPageInner() {
                     <label className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2 block">
                       Full name
                     </label>
-                    <input
+                    <FieldInput
                       type="text"
                       autoComplete="name"
                       placeholder="Your name"
                       value={displayName}
                       onChange={(ev) => setDisplayName(ev.target.value)}
-                      className="input-dark w-full"
+                      disabled={sending}
                     />
                   </div>
                 )}
                 <div>
                   <label className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2 block">Email</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                    <input
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(ev) => setEmail(ev.target.value)}
-                      className="input-dark pl-10 w-full"
-                      disabled={sending}
-                    />
-                  </div>
+                  <FieldInput
+                    type="email"
+                    icon={Mail}
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(ev) => setEmail(ev.target.value)}
+                    disabled={sending}
+                  />
                 </div>
                 <Button type="button" onClick={sendOtp} disabled={sending} className="w-full text-base" size="lg">
                   {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send OTP</>}
@@ -234,7 +278,12 @@ function SignInPageInner() {
                 <p className="text-sm text-white/50 text-center">
                   Enter the code sent to <span className="text-white/80 font-medium">{email}</span>
                 </p>
-                <div className="flex gap-2 justify-center" onPaste={handleOtpPaste}>
+                <div
+                  className="flex flex-wrap justify-center gap-2 sm:gap-2.5"
+                  onPaste={handleOtpPaste}
+                  role="group"
+                  aria-label="One-time code"
+                >
                   {otp.map((digit, i) => (
                     <input
                       key={i}
@@ -246,15 +295,16 @@ function SignInPageInner() {
                       value={digit}
                       onChange={(ev) => handleOtpChange(i, ev.target.value)}
                       onKeyDown={(ev) => handleOtpKeyDown(i, ev)}
-                      className="w-11 h-14 text-center text-xl font-mono font-bold rounded-xl border border-zinc-700 bg-zinc-950 text-white focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                      className="input-dark !min-h-[3rem] !w-11 !px-0 !py-0 text-center text-xl font-mono font-bold sm:!w-12 sm:text-2xl"
                       disabled={verifying}
+                      aria-label={`Digit ${i + 1}`}
                     />
                   ))}
                 </div>
                 <Button
                   type="button"
                   onClick={verifyAndSignIn}
-                  disabled={verifying}
+                  disabled={verifying || !otpComplete}
                   className="w-full text-base"
                   size="lg"
                 >
@@ -269,17 +319,18 @@ function SignInPageInner() {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
                   <button
                     type="button"
+                    disabled={verifying}
                     onClick={() => {
                       setStep('email');
                       setOtp(['', '', '', '', '', '']);
                     }}
-                    className="text-zinc-500 hover:text-white transition-colors"
+                    className="text-zinc-500 hover:text-white transition-colors disabled:opacity-40"
                   >
                     ← Change email
                   </button>
                   <button
                     type="button"
-                    disabled={resendCooldown > 0 || sending}
+                    disabled={resendCooldown > 0 || sending || verifying}
                     onClick={sendOtp}
                     className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
                   >

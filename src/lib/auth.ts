@@ -22,6 +22,9 @@ export const authOptions: NextAuthOptions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ...( { trustHost: true } as any ),
 
+  /** HTTPS (Vercel / production): secure session cookies. Local http:// keeps cookies usable. */
+  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') === true,
+
   debug: isDev,
 
   providers: [

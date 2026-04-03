@@ -24,7 +24,7 @@ export default withAuth(
     pages: {
       signIn: '/auth/signin',
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
   }
 );
 

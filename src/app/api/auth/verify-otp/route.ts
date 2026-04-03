@@ -117,6 +117,8 @@ export async function POST(req: NextRequest) {
 
     const loginToken = await createEmailLoginToken(emailNorm);
 
+    console.log('[api] POST /api/auth/verify-otp — success', { isNewUser });
+
     return jsonOk({
       message: 'Signed in successfully.',
       loginToken,
