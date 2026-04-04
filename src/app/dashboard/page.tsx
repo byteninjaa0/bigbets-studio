@@ -151,7 +151,7 @@ export default function DashboardPage() {
               }
             </div>
             <div>
-              <h1 className="font-display font-black text-3xl text-white">
+              <h1 className="font-sans font-black text-3xl text-white">
                 Hey, {session?.user?.name?.split(' ')[0]}! 👋
               </h1>
               <p className="text-white/40 text-sm">{session?.user?.email}</p>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3`}>
                 <stat.icon className="w-5 h-5 text-white/70" />
               </div>
-              <p className="font-display font-black text-2xl text-white">{stat.value}</p>
+              <p className="font-sans font-black text-2xl text-white">{stat.value}</p>
               <p className="text-white/40 text-xs mt-0.5">{stat.label}</p>
             </motion.div>
           ))}
@@ -211,7 +211,7 @@ export default function DashboardPage() {
           className="glass-gold rounded-2xl p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div>
-            <h3 className="font-display font-bold text-xl text-white mb-1">Ready for your next session? 🎙️</h3>
+            <h3 className="font-sans font-bold text-xl text-white mb-1">Ready for your next session? 🎙️</h3>
             <p className="text-white/50 text-sm">Slots are filling fast. Book yours now!</p>
           </div>
           <Link href="/booking" className="btn-primary w-full justify-center whitespace-nowrap sm:w-auto">
@@ -223,7 +223,7 @@ export default function DashboardPage() {
         {bookings.length === 0 ? (
           <div className="text-center py-20">
             <Mic2 className="w-16 h-16 text-white/10 mx-auto mb-4" />
-            <h3 className="font-display font-bold text-2xl text-white/40 mb-2">No bookings yet</h3>
+            <h3 className="font-sans font-bold text-2xl text-white/40 mb-2">No bookings yet</h3>
             <p className="text-white/25 text-sm mb-6">Your first session is just a click away.</p>
             <Link href="/booking" className="btn-primary mx-auto inline-flex w-full max-w-xs justify-center sm:w-auto">
               Book Your First Session
@@ -299,7 +299,7 @@ function BookingCard({ booking, onCancel, cancellingId, index, isPast = false }:
                 ₹{booking.amount.toLocaleString('en-IN')}
               </span>
             </div>
-            <p className="text-white/25 text-xs mt-1 font-mono">#{booking._id.slice(-8).toUpperCase()}</p>
+            <p className="mt-1 font-sans text-xs tabular-nums tracking-wide text-white/25">#{booking._id.slice(-8).toUpperCase()}</p>
           </div>
         </div>
 

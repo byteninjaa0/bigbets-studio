@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,7 @@ import { apiMessage } from '@/lib/api-message';
 import { MockPaymentModal } from '@/components/booking/MockPaymentModal';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { FieldInput } from '@/components/ui/field-input';
+import { scrollIntoViewSmooth } from '@/lib/scroll-into-view-smooth';
 
 type Step = 'package' | 'datetime' | 'checkout' | 'success';
 
@@ -45,9 +46,60 @@ export default function BookingPage() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [bookingId, setBookingId] = useState('');
 
+  const datetimeStepRef = useRef<HTMLDivElement>(null);
+  const timeSlotsRef = useRef<HTMLDivElement>(null);
+  const continueRowRef = useRef<HTMLDivElement>(null);
+  const checkoutStepRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  const prevStepRef = useRef<Step | null>(null);
+
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/auth/signin?callbackUrl=/booking');
   }, [status, router]);
+
+  /** Step transitions: guide user to the next block (fixed header offset via scroll-mt). */
+  useEffect(() => {
+    const prev = prevStepRef.current;
+    prevStepRef.current = step;
+
+    if (prev === null) {
+      if (step === 'datetime') {
+        scrollIntoViewSmooth(datetimeStepRef.current, { delayMs: 520, block: 'start' });
+      }
+      return;
+    }
+
+    if (prev === 'package' && step === 'datetime') {
+      scrollIntoViewSmooth(datetimeStepRef.current, { delayMs: 280, block: 'start' });
+    }
+    if (prev === 'checkout' && step === 'datetime') {
+      scrollIntoViewSmooth(datetimeStepRef.current, { delayMs: 220, block: 'start' });
+    }
+    if (prev === 'datetime' && step === 'checkout') {
+      scrollIntoViewSmooth(checkoutStepRef.current, { delayMs: 240, block: 'start' });
+    }
+    if (prev !== 'success' && step === 'success') {
+      scrollIntoViewSmooth(successRef.current, { delayMs: 280, block: 'start' });
+    }
+  }, [step]);
+
+  /** After choosing a date, bring time slots into view once slots have loaded (not while fetching). */
+  useEffect(() => {
+    if (!selectedDate || step !== 'datetime' || slotsLoading) return;
+    const t = window.setTimeout(() => {
+      scrollIntoViewSmooth(timeSlotsRef.current, { block: 'nearest' });
+    }, 140);
+    return () => window.clearTimeout(t);
+  }, [selectedDate, step, slotsLoading]);
+
+  /** After choosing a slot, surface “Continue to checkout”. */
+  useEffect(() => {
+    if (!selectedSlot || step !== 'datetime') return;
+    const t = window.setTimeout(() => {
+      scrollIntoViewSmooth(continueRowRef.current, { delayMs: 100, block: 'nearest' });
+    }, 80);
+    return () => window.clearTimeout(t);
+  }, [selectedSlot, step]);
 
   const fetchSlots = useCallback(async (date: Date) => {
     setSlotsLoading(true);
@@ -159,7 +211,7 @@ export default function BookingPage() {
               <ArrowLeft className="w-4 h-4" />
             </button>
           )}
-          <h1 className="font-display font-black text-3xl sm:text-4xl text-white">
+          <h1 className="font-sans font-black text-3xl sm:text-4xl text-white">
             {step === 'success' ? 'Booking Confirmed! 🎉' : 'Book Your Session'}
           </h1>
         </div>
@@ -208,7 +260,7 @@ export default function BookingPage() {
                     {pkg.badge && (
                       <span className={`inline-block mb-3 text-xs font-bold px-3 py-1 rounded-full ${isPopular ? 'badge-popular' : 'badge-premium'}`}>{pkg.badge}</span>
                     )}
-                    <h3 className="font-display font-black text-2xl text-white mb-1">{pkg.name}</h3>
+                    <h3 className="font-sans font-black text-2xl text-white mb-1">{pkg.name}</h3>
                     <p className="text-white/40 text-sm mb-4">{pkg.tagline}</p>
                     <div className="text-3xl font-black text-gradient-gold mb-4">₹{pkg.price.toLocaleString('en-IN')}</div>
                     <ul className="space-y-2 mb-6">
@@ -231,7 +283,14 @@ export default function BookingPage() {
 
         {/* ─── STEP: Date & Time ─── */}
         {step === 'datetime' && (
-          <motion.div key="datetime" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+          <motion.div
+            key="datetime"
+            ref={datetimeStepRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="scroll-mt-24"
+          >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Calendar */}
               <div className="card-dark p-6">
@@ -282,7 +341,7 @@ export default function BookingPage() {
               </div>
 
               {/* Slots */}
-              <div className="card-dark p-6">
+              <div ref={timeSlotsRef} className="card-dark scroll-mt-24 p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="font-semibold text-white flex items-center gap-2">
                     <Clock className="w-5 h-5 text-zinc-400" /> Select Time Slot
@@ -342,7 +401,7 @@ export default function BookingPage() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-stretch sm:justify-end">
+            <div ref={continueRowRef} className="mt-6 flex scroll-mt-24 justify-stretch sm:justify-end">
               <button
                 type="button"
                 onClick={handleDateTimeConfirm}
@@ -357,7 +416,14 @@ export default function BookingPage() {
 
         {/* ─── STEP: Checkout ─── */}
         {step === 'checkout' && item && (
-          <motion.div key="checkout" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+          <motion.div
+            key="checkout"
+            ref={checkoutStepRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="scroll-mt-24"
+          >
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               {/* Summary */}
               <div className="lg:col-span-3 space-y-5">
@@ -400,7 +466,7 @@ export default function BookingPage() {
                           setCouponCode(e.target.value.toUpperCase());
                           setCouponResult(null);
                         }}
-                        className="font-mono tracking-widest text-sm"
+                        className="font-sans tabular-nums tracking-widest text-sm"
                         disabled={!!couponResult}
                       />
                     </div>
@@ -475,7 +541,13 @@ export default function BookingPage() {
 
         {/* ─── STEP: Success ─── */}
         {step === 'success' && (
-          <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-xl mx-auto text-center py-8">
+          <motion.div
+            key="success"
+            ref={successRef}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mx-auto max-w-xl scroll-mt-24 py-8 text-center"
+          >
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -484,14 +556,16 @@ export default function BookingPage() {
             >
               <CheckCircle2 className="w-12 h-12 text-white" />
             </motion.div>
-            <h2 className="font-display font-black text-4xl text-white mb-3">You&apos;re Booked! 🎙️</h2>
+            <h2 className="font-sans font-black text-4xl text-white mb-3">You&apos;re Booked! 🎙️</h2>
             <p className="text-white/50 text-base leading-relaxed mb-8">
               Your studio session is confirmed. Check your email for the confirmation details.
               We can&apos;t wait to see you create!
             </p>
             <div className="glass-gold rounded-2xl p-5 mb-8">
               <p className="text-zinc-400/70 text-xs font-bold uppercase tracking-widest mb-2">Booking Reference</p>
-              <p className="font-mono text-zinc-400 text-xl font-black tracking-widest">#{bookingId.slice(-8).toUpperCase()}</p>
+              <p className="font-sans text-xl font-black tabular-nums tracking-widest text-zinc-400">
+                #{bookingId.slice(-8).toUpperCase()}
+              </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link href="/dashboard" className="btn-primary px-8 py-3.5">View My Bookings</Link>

@@ -66,8 +66,8 @@ function GalleryImage({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-zinc-900/90 p-4 text-center">
           <ImageOff className="w-8 h-8 text-zinc-600" aria-hidden />
           <p className="text-xs text-zinc-500 leading-snug">
-            Add <span className="font-mono text-zinc-400">{src.replace('/photos/', '')}</span> to{' '}
-            <span className="font-mono text-zinc-400">public/photos</span>
+            Add <span className="font-sans text-zinc-400">{src.replace('/photos/', '')}</span> to{' '}
+            <span className="font-sans text-zinc-400">public/photos</span>
           </p>
         </div>
       )}
@@ -93,7 +93,7 @@ export default function Gallery() {
           <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
             Studio Gallery
           </span>
-          <h2 className="mb-4 font-display text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
             See Our{' '}
             <span className="text-gradient-gold italic">Space</span>
           </h2>
@@ -120,8 +120,8 @@ export default function Gallery() {
           <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 px-8 py-16 text-center">
             <p className="text-white/70 text-sm font-medium mb-1">Studio photos</p>
             <p className="text-white/40 text-sm max-w-md mx-auto">
-              Add JPEG or WebP files to <span className="font-mono text-zinc-500">public/photos</span> and list them in{' '}
-              <span className="font-mono text-zinc-500">src/config/site.ts</span> under <span className="font-mono text-zinc-500">gallery</span>.
+              Add JPEG or WebP files to <span className="font-sans text-zinc-500">public/photos</span> and list them in{' '}
+              <span className="font-sans text-zinc-500">src/config/site.ts</span> under <span className="font-sans text-zinc-500">gallery</span>.
             </p>
           </div>
         )}

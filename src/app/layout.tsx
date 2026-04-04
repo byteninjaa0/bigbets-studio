@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Abel, JetBrains_Mono } from 'next/font/google';
+import { Abel } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import { Toaster } from 'react-hot-toast';
@@ -10,12 +10,6 @@ const abel = Abel({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  weight: ['400', '700'],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${abel.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={abel.variable}>
       <body className="min-h-screen bg-black font-sans text-white antialiased">
         <Providers>
           {children}
@@ -46,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 color: '#fafafa',
                 border: '1px solid #27272a',
                 borderRadius: '12px',
-                fontFamily: 'var(--font-sans), sans-serif',
+                fontFamily: 'var(--font-sans), Abel, ui-sans-serif, sans-serif',
                 fontSize: '14px',
               },
               success: {

@@ -40,7 +40,7 @@ export default function SocialProof() {
               <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-700/80 bg-zinc-900/50">
                 <p.icon className="h-4 w-4 text-zinc-400" />
               </div>
-              <p className="font-display text-xs font-bold leading-tight text-white sm:text-sm">{p.label}</p>
+              <p className="font-sans text-xs font-bold leading-tight text-white sm:text-sm">{p.label}</p>
               <p className="mt-1 break-words text-[11px] leading-snug text-white/35 sm:text-xs">{p.sub}</p>
             </motion.div>
           ))}

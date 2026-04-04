@@ -50,11 +50,13 @@ module.exports = {
           foreground: 'hsl(var(--accent-foreground))',
         },
       },
+      /* Abel via next/font → --font-sans; explicit fallbacks for FOUT and non-JS */
       fontFamily: {
-        sans: ['var(--font-sans)', 'sans-serif'],
-        display: ['var(--font-sans)', 'sans-serif'],
-        body: ['var(--font-sans)', 'sans-serif'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        sans: ['var(--font-sans)', 'Abel', 'ui-sans-serif', 'sans-serif'],
+        display: ['var(--font-sans)', 'Abel', 'ui-sans-serif', 'sans-serif'],
+        body: ['var(--font-sans)', 'Abel', 'ui-sans-serif', 'sans-serif'],
+        /* UI uses one typeface; use tabular-nums / tracking for “code-like” lines */
+        mono: ['var(--font-sans)', 'Abel', 'ui-sans-serif', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

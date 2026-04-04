@@ -172,7 +172,7 @@ export default function AdminPage() {
               <Shield className="w-5 h-5 text-zinc-400" />
             </div>
             <div>
-              <h1 className="font-display font-black text-3xl text-white">Admin Panel</h1>
+              <h1 className="font-sans font-black text-3xl text-white">Admin Panel</h1>
               <p className="text-white/40 text-sm">BigBets Studio management</p>
             </div>
           </div>
@@ -214,7 +214,7 @@ export default function AdminPage() {
                   <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center mb-4`}>
                     <card.icon className="w-5 h-5 text-white/70" />
                   </div>
-                  <p className="font-display font-black text-2xl text-white mb-0.5">{card.value}</p>
+                  <p className="font-sans font-black text-2xl text-white mb-0.5">{card.value}</p>
                   <p className="text-white/50 text-sm">{card.label}</p>
                   <p className="text-white/25 text-xs mt-1">{card.change}</p>
                 </motion.div>

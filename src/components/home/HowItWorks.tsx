@@ -23,7 +23,7 @@ export default function HowItWorks() {
           <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
             How It Works
           </span>
-          <h2 className="mb-4 font-display text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
             Book in{' '}
             <span className="text-gradient-gold italic">4 Simple</span>
             {' '}Steps
@@ -51,11 +51,11 @@ export default function HowItWorks() {
                   >
                     <step.icon className="h-9 w-9 text-white" />
                   </div>
-                  <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#111] border border-zinc-500/30 text-zinc-400 text-xs font-black font-mono flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-500/30 bg-[#111] font-sans text-xs font-black tabular-nums text-zinc-400">
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="mb-2 font-display text-lg font-bold text-white">{step.title}</h3>
+                <h3 className="mb-2 font-sans text-lg font-bold text-white">{step.title}</h3>
                 <p className="mx-auto max-w-xs text-sm leading-relaxed text-white/50">{step.desc}</p>
               </motion.div>
             ))}

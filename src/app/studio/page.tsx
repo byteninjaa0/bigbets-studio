@@ -16,7 +16,7 @@ export default function StudioPage() {
       <div className="pt-16 sm:pt-[4.5rem]">
         <section className="border-b border-white/[0.06] py-12 md:py-16">
           <PageContainer>
-            <h1 className="font-display text-3xl font-black text-white sm:text-4xl md:text-5xl">
+            <h1 className="font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
               The studio
             </h1>
             <p className="mt-4 max-w-2xl text-base text-white/55 sm:text-lg">

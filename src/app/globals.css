@@ -31,7 +31,8 @@
   }
 
   html {
-    @apply scroll-smooth overflow-x-hidden antialiased;
+    @apply scroll-smooth overflow-x-hidden antialiased font-sans;
+    font-family: var(--font-sans), Abel, ui-sans-serif, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-text-size-adjust: 100%;
     /* ~+2pt vs typical 16px browser default (16px × 14/12 ≈ 18.67px) — scales all rem-based Tailwind type */
@@ -346,6 +347,7 @@
   --rdp-accent-color: #fafafa;
   --rdp-background-color: rgba(255, 255, 255, 0.08);
   color: #fff;
+  font-family: var(--font-sans), Abel, ui-sans-serif, sans-serif;
 }
 
 /* WhatsApp float — monochrome shell (brand icon only) */
@@ -374,7 +376,8 @@
   border: 1px solid #27272a;
   border-radius: 0.75rem;
   padding: 0.5rem 1rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-sans), Abel, ui-sans-serif, sans-serif;
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
   color: #fafafa;
   font-size: 1.25rem;
@@ -410,7 +413,7 @@
 }
 
 .Toaster {
-  font-family: var(--font-sans), sans-serif !important;
+  font-family: var(--font-sans), Abel, ui-sans-serif, sans-serif !important;
 }
 
 @keyframes page-enter {

@@ -24,8 +24,8 @@ function AuthErrorContent() {
       <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-700 flex items-center justify-center mx-auto mb-5">
         <AlertCircle className="w-7 h-7 text-zinc-400" />
       </div>
-      <h1 className="font-display font-black text-2xl text-white mb-2">Sign-in problem</h1>
-      {error !== 'Default' && <p className="text-zinc-400/90 text-sm font-mono mb-3 break-all">{error}</p>}
+      <h1 className="font-sans font-black text-2xl text-white mb-2">Sign-in problem</h1>
+      {error !== 'Default' && <p className="mb-3 break-all font-sans text-sm text-zinc-400/90">{error}</p>}
       <p className="text-white/50 text-sm leading-relaxed mb-6">{hint}</p>
       <Link
         href="/auth/signin"

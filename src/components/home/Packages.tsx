@@ -50,7 +50,7 @@ export default function Packages() {
           <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
             Our Packages
           </span>
-          <h2 className="mb-5 font-display text-3xl font-black text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <h2 className="mb-5 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl lg:text-6xl">
             Choose Your{' '}
             <span className="text-gradient-gold italic">Perfect</span>
             <br />Studio Package
@@ -99,7 +99,7 @@ export default function Packages() {
                           {pkg.badge}
                         </span>
                       )}
-                      <h3 className="font-display font-black text-2xl text-white">{pkg.name}</h3>
+                      <h3 className="font-sans font-black text-2xl text-white">{pkg.name}</h3>
                       <p className="text-white/40 text-sm mt-0.5">{pkg.tagline}</p>
                     </div>
                     {isPopular && (
@@ -112,7 +112,7 @@ export default function Packages() {
                   {/* Price */}
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-black font-display text-gradient-gold">
+                      <span className="text-4xl font-black font-sans text-gradient-gold">
                         ₹{pkg.price.toLocaleString('en-IN')}
                       </span>
                       <span className="text-white/30 text-sm">/session</span>

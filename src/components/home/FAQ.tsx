@@ -59,7 +59,7 @@ export default function FAQ() {
           <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
             FAQ
           </span>
-          <h2 className="mb-4 font-display text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
             Got <span className="text-gradient-gold italic">Questions?</span>
           </h2>
           <p className="text-base text-white/50">Everything you need to know before booking.</p>

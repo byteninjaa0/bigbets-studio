@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
             <Mic2 className="w-4 h-4 text-black" />
           </div>
-          <span className="font-display font-black text-lg">
+          <span className="font-sans font-black text-lg">
             <span className="text-gradient-gold">BigBets</span>
             <span className="text-white/80"> Studio</span>
           </span>

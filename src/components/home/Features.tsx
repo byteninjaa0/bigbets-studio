@@ -34,7 +34,7 @@ export default function Features() {
           <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
             Studio Features
           </span>
-          <h2 className="mb-4 font-display text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
             Everything You Need
             <br />
             <span className="text-gradient-gold italic">In One Place</span>

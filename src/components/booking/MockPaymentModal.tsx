@@ -166,7 +166,7 @@ export function MockPaymentModal({
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           >
             <div className="flex items-center justify-between px-6 pt-5 pb-2">
-              <h2 id="mock-payment-title" className="font-display text-xl font-black text-white tracking-tight">
+              <h2 id="mock-payment-title" className="font-sans text-xl font-black tracking-tight text-white">
                 Complete payment
               </h2>
               {phase !== 'processing' && (
@@ -236,7 +236,7 @@ export function MockPaymentModal({
                         )}
                         <div className="flex justify-between items-baseline pt-2 border-t border-white/[0.06]">
                           <span className="text-sm font-medium text-white/50">Total due</span>
-                          <span className="font-display text-3xl font-black text-white">
+                          <span className="font-sans text-3xl font-black text-white">
                             ₹{displayTotal.toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -296,7 +296,7 @@ export function MockPaymentModal({
                     >
                       <CheckCircle2 className="w-9 h-9" />
                     </motion.div>
-                    <h3 className="font-display text-2xl font-black text-white mb-2">Payment successful 🎉</h3>
+                    <h3 className="mb-2 font-sans text-2xl font-black text-white">Payment successful 🎉</h3>
                     <p className="text-white/45 text-sm">Your booking is confirmed.</p>
                   </motion.div>
                 )}
@@ -312,7 +312,7 @@ export function MockPaymentModal({
                       <AlertCircle className="w-7 h-7 text-zinc-400" />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-bold text-white mb-1">Payment failed</h3>
+                      <h3 className="mb-1 font-sans text-lg font-bold text-white">Payment failed</h3>
                       <p className="text-white/45 text-sm">Please try again.</p>
                     </div>
                     <button

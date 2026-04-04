@@ -60,7 +60,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-6 font-display text-[clamp(2.25rem,6.5vw,5.5rem)] font-black leading-[1.05] tracking-tight"
+            className="mb-6 font-sans text-[clamp(2.25rem,6.5vw,5.5rem)] font-black leading-[1.05] tracking-tight"
           >
             <span className="text-white">Book Your</span>
             <br />

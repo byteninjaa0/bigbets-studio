@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FieldInput } from '@/components/ui/field-input';
 import { apiMessage } from '@/lib/api-message';
 import { cn } from '@/lib/utils';
+import { scrollIntoViewSmooth } from '@/lib/scroll-into-view-smooth';
 
 type VerifyOtpResponse = {
   success?: boolean;
@@ -45,6 +46,8 @@ function SignInPageInner() {
   const [verifying, setVerifying] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const otpSectionRef = useRef<HTMLDivElement>(null);
+  const prevStepRef = useRef<Step>('email');
 
   const startResendCooldown = useCallback((seconds: number) => {
     setResendCooldown(seconds);
@@ -60,8 +63,13 @@ function SignInPageInner() {
   }, []);
 
   useEffect(() => {
+    const prev = prevStepRef.current;
+    prevStepRef.current = step;
+    if (prev === 'email' && step === 'otp') {
+      scrollIntoViewSmooth(otpSectionRef.current, { delayMs: 220, block: 'nearest' });
+    }
     if (step === 'otp') {
-      const t = setTimeout(() => document.getElementById('otp-0')?.focus(), 200);
+      const t = setTimeout(() => document.getElementById('otp-0')?.focus(), 320);
       return () => clearTimeout(t);
     }
   }, [step]);
@@ -211,7 +219,7 @@ function SignInPageInner() {
     >
       <Card className="rounded-3xl border-white/[0.08] bg-white/[0.03] backdrop-blur-xl shadow-2xl shadow-black/40">
         <CardHeader className="space-y-1 text-center pb-2">
-          <CardTitle className="font-display text-3xl font-black tracking-tight text-white">
+          <CardTitle className="font-sans text-3xl font-black tracking-tight text-white">
             {registerMode ? 'Create account' : 'Welcome back'}
           </CardTitle>
           <CardDescription className="text-base text-white/40">
@@ -269,12 +277,13 @@ function SignInPageInner() {
             {step === 'otp' && (
               <motion.div
                 key="otp"
+                ref={otpSectionRef}
                 variants={variants}
                 initial="enter"
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.25 }}
-                className="space-y-5"
+                className="scroll-mt-24 space-y-5"
               >
                 <p className="text-sm text-white/50 text-center">
                   Enter the code sent to <span className="text-white/80 font-medium">{email}</span>
@@ -299,7 +308,7 @@ function SignInPageInner() {
                         onChange={(ev) => handleOtpChange(i, ev.target.value)}
                         onKeyDown={(ev) => handleOtpKeyDown(i, ev)}
                         className={cn(
-                          'input-dark box-border !min-h-[2.75rem] !min-w-0 w-full !px-0 !py-0 text-center font-mono font-bold leading-none',
+                          'input-dark box-border !min-h-[2.75rem] !min-w-0 w-full !px-0 !py-0 text-center font-sans font-bold leading-none',
                           'text-lg tabular-nums sm:!min-h-[3rem] sm:text-xl',
                           'whitespace-nowrap [text-wrap:nowrap]'
                         )}

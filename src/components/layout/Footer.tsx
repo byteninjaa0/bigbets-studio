@@ -15,7 +15,7 @@ export default function Footer() {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 flex items-center justify-center">
                 <Mic2 className="w-5 h-5 text-black" />
               </div>
-              <span className="font-display font-black text-xl">
+              <span className="font-sans font-black text-xl">
                 <span className="text-gradient-gold">BigBets</span>
                 <span className="text-white/90"> Studio</span>
               </span>

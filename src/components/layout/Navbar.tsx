@@ -102,7 +102,7 @@ export default function Navbar() {
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 shadow-lg transition-transform duration-200 group-hover:scale-[1.02]">
               <Mic2 className="h-5 w-5 text-black" />
             </div>
-            <span className="truncate font-display text-base font-black tracking-tight text-white sm:text-lg md:text-xl">
+            <span className="truncate font-sans text-base font-black tracking-tight text-white sm:text-lg md:text-xl">
               <span className="text-gradient-gold">BigBets</span>
               <span className="text-white"> Studio</span>
             </span>
@@ -271,7 +271,7 @@ export default function Navbar() {
               aria-labelledby="mobile-nav-title"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <span id="mobile-nav-title" className="font-display text-lg font-black text-white">
+                <span id="mobile-nav-title" className="font-sans text-lg font-black text-white">
                   Menu
                 </span>
                 <button
