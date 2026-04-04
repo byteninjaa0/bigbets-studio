@@ -9,7 +9,7 @@ const pillars = [
   { icon: MapPin, label: 'Ghaziabad NCR', sub: 'Crossing Republik studio' },
   { icon: Video, label: siteConfig.equipment[0], sub: 'Multi-cam switching' },
   { icon: CalendarCheck, label: 'Book online', sub: 'Pick date & time' },
-  { icon: Wallet, label: 'Secure checkout', sub: 'Demo payment · instant confirm' },
+  { icon: Wallet, label: 'Secure checkout', sub: 'instant confirm' },
   { icon: Headphones, label: 'Pro audio chain', sub: 'Treated room & mics' },
   { icon: ShieldCheck, label: 'Clear policies', sub: '24h cancellation window' },
 ];

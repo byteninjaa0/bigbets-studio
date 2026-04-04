@@ -98,7 +98,7 @@ export default function Gallery() {
             <span className="text-gradient-gold italic">Space</span>
           </h2>
           <p className="mx-auto max-w-xl break-words px-1 text-sm text-white/45">
-            Real photos from our Ghaziabad studio — swap files in <code className="text-zinc-400">public/photos</code>{' '}
+            Real photos from our Ghaziabad studio {' '}
             anytime to match your latest setup.
           </p>
           <div className="section-divider mt-6" />

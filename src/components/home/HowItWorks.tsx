@@ -6,7 +6,7 @@ import { PageContainer } from '@/components/layout/PageContainer';
 const steps = [
   { icon: Search, step: '01', title: 'Choose a Package', desc: 'Browse our packages and select one that matches your content goals and budget.', color: 'from-zinc-500 to-zinc-600' },
   { icon: Calendar, step: '02', title: 'Pick Date & Time', desc: 'Select your preferred date and time slot from our real-time availability calendar.', color: 'from-zinc-600 to-zinc-700' },
-  { icon: CreditCard, step: '03', title: 'Secure Payment', desc: 'Complete demo checkout — feels like the real thing, no card required.', color: 'from-zinc-700 to-zinc-800' },
+  { icon: CreditCard, step: '03', title: 'Secure Payment', desc: 'feels like the real thing, no card required.', color: 'from-zinc-700 to-zinc-800' },
   { icon: Mic2, step: '04', title: 'Record & Shine', desc: 'Show up, plug in, and create. We handle the rest. Files delivered in 24h.', color: 'from-zinc-800 to-zinc-900' },
 ];
 

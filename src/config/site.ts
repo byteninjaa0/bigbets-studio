@@ -35,7 +35,7 @@ export const siteConfig = {
 
   /** Full gear list for features / FAQ-style copy */
   equipmentDetails: [
-    'Blackmagic ATEM Mini Pro — live multi-camera switching & recording',
+    'Blackmagic ATEM Mini Pro',
     'Studio condenser & dynamic microphones',
     '4K camera pipeline with professional framing',
     'Acoustic treatment & sound-isolated recording space',
