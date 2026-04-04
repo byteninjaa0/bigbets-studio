@@ -7,72 +7,42 @@ import { ImageOff } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 import { PageContainer } from '@/components/layout/PageContainer';
 
-type GridCell = { span: string; aspect: string };
-
-const GRID_LAYOUT_6: GridCell[] = [
-  { span: 'md:col-span-2', aspect: 'aspect-[2/1] min-h-[200px]' },
-  { span: '', aspect: 'aspect-square min-h-[180px]' },
-  { span: '', aspect: 'aspect-square min-h-[180px]' },
-  { span: '', aspect: 'aspect-[4/3] min-h-[200px]' },
-  { span: '', aspect: 'aspect-[4/3] min-h-[200px]' },
-  { span: 'md:col-span-2', aspect: 'aspect-[2/1] min-h-[200px]' },
-];
-
-/** Balanced 3-column layout for exactly four images */
-const GRID_LAYOUT_4: GridCell[] = [
-  { span: 'md:col-span-2', aspect: 'aspect-[2/1] min-h-[220px]' },
-  { span: '', aspect: 'aspect-square min-h-[200px]' },
-  { span: '', aspect: 'aspect-square min-h-[200px]' },
-  { span: 'md:col-span-2', aspect: 'aspect-[2/1] min-h-[220px]' },
-];
-
-function getGalleryLayout(index: number, total: number): GridCell {
-  if (total === 4) return GRID_LAYOUT_4[index] ?? GRID_LAYOUT_4[GRID_LAYOUT_4.length - 1];
-  return GRID_LAYOUT_6[index % GRID_LAYOUT_6.length];
-}
-
-function GalleryImage({
-  src,
-  alt,
-  caption,
-  layout,
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-  layout: GridCell;
-}) {
+function GalleryImage({ src, alt, caption }: { src: string; alt: string; caption: string }) {
   const [broken, setBroken] = useState(false);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.98 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.45 }}
-      className={`relative ${layout.span} ${layout.aspect} rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-950 group`}
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      className="group min-w-0 w-full"
     >
-      {!broken ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition duration-500 ease-out group-hover:scale-[1.04] group-hover:brightness-110"
-          onError={() => setBroken(true)}
-          priority={false}
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-zinc-900/90 p-4 text-center">
-          <ImageOff className="w-8 h-8 text-zinc-600" aria-hidden />
-          <p className="text-xs text-zinc-500 leading-snug">
-            Add <span className="font-sans text-zinc-400">{src.replace('/photos/', '')}</span> to{' '}
-            <span className="font-sans text-zinc-400">public/photos</span>
-          </p>
-        </div>
-      )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
-      <p className="absolute bottom-0 left-0 right-0 px-4 py-3 text-sm font-medium text-white/90">{caption}</p>
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-zinc-800/90 bg-zinc-950 shadow-sm ring-1 ring-black/20 transition-[box-shadow,transform] duration-300 ease-out hover:shadow-lg hover:shadow-black/40 hover:ring-zinc-700/50 sm:rounded-2xl">
+        {!broken ? (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover object-center transition duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-[1.06]"
+            onError={() => setBroken(true)}
+            priority={false}
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-zinc-900/90 p-4 text-center">
+            <ImageOff className="h-8 w-8 text-zinc-600" aria-hidden />
+            <p className="text-xs leading-snug text-zinc-500">
+              Add <span className="font-sans text-zinc-400">{src.replace('/photos/', '')}</span> to{' '}
+              <span className="font-sans text-zinc-400">public/photos</span>
+            </p>
+          </div>
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-95" />
+        <p className="absolute bottom-0 left-0 right-0 px-4 py-3 text-sm font-medium tracking-tight text-white/95 drop-shadow-sm">
+          {caption}
+        </p>
+      </div>
     </motion.div>
   );
 }
@@ -82,46 +52,44 @@ export default function Gallery() {
   const hasAnySlot = items.length > 0;
 
   return (
-    <section className="relative py-12 md:py-20 animated-bg">
+    <section className="relative overflow-x-hidden py-12 md:py-20 animated-bg">
       <PageContainer>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-10 text-center md:mb-12"
+          className="mb-8 text-center md:mb-12"
         >
-          <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
+          <span className="glass-gold mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
             Studio Gallery
           </span>
           <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
-            See Our{' '}
-            <span className="text-gradient-gold italic">Space</span>
+            See Our <span className="text-gradient-gold italic">Space</span>
           </h2>
-          <p className="mx-auto max-w-xl break-words px-1 text-sm text-white/45">
-            Real photos from our Ghaziabad studio {' '}
-            anytime to match your latest setup.
+          <p className="mx-auto max-w-xl break-words px-1 text-sm leading-relaxed text-white/45">
+            Real photos from our Ghaziabad studio. Update them anytime to match your latest setup.
           </p>
           <div className="section-divider mt-6" />
         </motion.div>
 
         {hasAnySlot ? (
-          <div className="grid auto-rows-fr grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3">
-            {items.map((item, i) => (
-              <GalleryImage
-                key={item.src}
-                src={item.src}
-                alt={item.alt}
-                caption={item.caption}
-                layout={getGalleryLayout(i, items.length)}
-              />
+          <div
+            className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
+            role="list"
+          >
+            {items.map((item) => (
+              <div key={item.src} className="min-w-0" role="listitem">
+                <GalleryImage src={item.src} alt={item.alt} caption={item.caption} />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 px-8 py-16 text-center">
-            <p className="text-white/70 text-sm font-medium mb-1">Studio photos</p>
-            <p className="text-white/40 text-sm max-w-md mx-auto">
+          <div className="rounded-2xl border border-dashed border-zinc-700 bg-zinc-950/50 px-6 py-14 text-center sm:px-8 sm:py-16">
+            <p className="mb-1 text-sm font-medium text-white/70">Studio photos</p>
+            <p className="mx-auto max-w-md text-sm text-white/40">
               Add JPEG or WebP files to <span className="font-sans text-zinc-500">public/photos</span> and list them in{' '}
-              <span className="font-sans text-zinc-500">src/config/site.ts</span> under <span className="font-sans text-zinc-500">gallery</span>.
+              <span className="font-sans text-zinc-500">src/config/site.ts</span> under{' '}
+              <span className="font-sans text-zinc-500">gallery</span>.
             </p>
           </div>
         )}
