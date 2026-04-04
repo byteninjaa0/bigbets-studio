@@ -1,0 +1,277 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Calendar, Clock, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+import { format, addDays, isBefore, startOfDay } from 'date-fns';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { PACKAGES, formatTimeSlot, getPackagePrice, BUSINESS_HOURS } from '@/lib/packages';
+import { apiMessage } from '@/lib/api-message';
+import { useCart, type CartLine } from '@/lib/cart-store';
+
+interface SlotInfo {
+  time: string;
+  isBooked: boolean;
+  isBlocked: boolean;
+  isAvailable: boolean;
+}
+
+type Props = {
+  packageId: string | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Called after a successful add (modal still open until you close in handler) */
+  onAdded?: (line: CartLine) => void;
+};
+
+export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }: Props) {
+  const addItem = useCart((s) => s.addItem);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedSlot, setSelectedSlot] = useState('');
+  const [slots, setSlots] = useState<SlotInfo[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const pkg = packageId ? PACKAGES[packageId as keyof typeof PACKAGES] : null;
+
+  const reset = useCallback(() => {
+    setSelectedDate(undefined);
+    setSelectedSlot('');
+    setSlots([]);
+    setSlotsLoading(false);
+    setSubmitting(false);
+  }, []);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
+
+  const fetchSlots = useCallback(async (date: Date) => {
+    setSlotsLoading(true);
+    setSelectedSlot('');
+    try {
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const { data } = await axios.get(`/api/slots?date=${dateStr}`);
+      if (data?.success === false) {
+        toast.error(apiMessage(data, 'Failed to load slots.'));
+        setSlots([]);
+        return;
+      }
+      setSlots(Array.isArray(data?.slots) ? data.slots : []);
+    } catch {
+      toast.error('Failed to load slots.');
+      setSlots([]);
+    } finally {
+      setSlotsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedDate) fetchSlots(selectedDate);
+  }, [selectedDate, fetchSlots]);
+
+  const isDisabledDay = (date: Date) => {
+    if (isBefore(date, startOfDay(new Date()))) return true;
+    if (date.getDay() === 0) return true;
+    return false;
+  };
+
+  const handleAdd = () => {
+    if (!packageId || !pkg || !selectedDate || !selectedSlot) {
+      toast.error('Choose a date and time slot.');
+      return;
+    }
+    const dateStr = format(selectedDate, 'yyyy-MM-dd');
+    const formattedDate = format(selectedDate, 'EEEE, MMMM d, yyyy');
+    const formattedTime = formatTimeSlot(selectedSlot);
+    const price = getPackagePrice(packageId, selectedDate);
+
+    setSubmitting(true);
+    const result = addItem({
+      packageId,
+      packageName: pkg.name,
+      price,
+      date: dateStr,
+      timeSlot: selectedSlot,
+      formattedDate,
+      formattedTime,
+    });
+    setSubmitting(false);
+
+    if (!result.ok) {
+      toast.error('This date & time is already in your cart for that package.');
+      return;
+    }
+
+    const line: CartLine = {
+      id: result.id,
+      packageId,
+      packageName: pkg.name,
+      price,
+      date: dateStr,
+      timeSlot: selectedSlot,
+      formattedDate,
+      formattedTime,
+    };
+    toast.success(`${pkg.name} added to cart`);
+    onAdded?.(line);
+    onOpenChange(false);
+  };
+
+  if (!pkg) return null;
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[140] flex items-end justify-center p-0 sm:items-center sm:p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-cart-title"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            aria-label="Close"
+            onClick={() => onOpenChange(false)}
+          />
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 40, opacity: 0 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+            className="relative z-10 flex max-h-[min(92vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-zinc-950 shadow-2xl sm:rounded-3xl"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <h2 id="add-cart-title" className="font-sans text-lg font-black text-white">
+                Add {pkg.name}
+              </h2>
+              <button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-white hover:bg-white/10"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
+              <p className="mb-4 text-sm text-white/45">
+                Pick a session date and time. The same slot cannot be added twice for this package.
+              </p>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="card-dark p-4">
+                  <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+                    <Calendar className="h-4 w-4 text-zinc-400" /> Date
+                  </h3>
+                  <div className="flex justify-center">
+                    <DayPicker
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      disabled={isDisabledDay}
+                      fromDate={new Date()}
+                      toDate={addDays(new Date(), 60)}
+                      className="text-white"
+                      classNames={{
+                        months: 'flex flex-col',
+                        month: 'space-y-3',
+                        caption: 'flex justify-between items-center mb-2 text-white text-sm font-semibold',
+                        nav: 'flex items-center gap-1',
+                        nav_button:
+                          'w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:bg-white/8 hover:text-white transition-all',
+                        table: 'w-full border-collapse',
+                        head_row: 'flex mb-1',
+                        head_cell: 'w-9 text-center text-white/30 text-[10px] font-medium',
+                        row: 'flex w-full mt-0.5',
+                        cell: 'relative w-9 h-9 flex items-center justify-center',
+                        day: 'w-8 h-8 rounded-lg text-xs font-medium text-white/70 hover:bg-zinc-500/15 cursor-pointer',
+                        day_selected: 'bg-white text-black font-bold',
+                        day_today: 'border border-zinc-500/40 text-zinc-400',
+                        day_disabled: 'text-white/15 cursor-not-allowed hover:bg-transparent',
+                        day_outside: 'text-white/15',
+                      }}
+                    />
+                  </div>
+                  {selectedDate && (
+                    <p className="mt-2 text-center text-xs text-white/40">
+                      {BUSINESS_HOURS[selectedDate.getDay()] ? 'Open that day' : 'Closed — pick another date'}
+                    </p>
+                  )}
+                </div>
+
+                <div className="card-dark p-4">
+                  <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
+                    <Clock className="h-4 w-4 text-zinc-400" /> Time
+                  </h3>
+                  {!selectedDate ? (
+                    <div className="flex h-40 flex-col items-center justify-center text-white/25">
+                      <Calendar className="mb-2 h-10 w-10 opacity-30" />
+                      <p className="text-xs">Select a date first</p>
+                    </div>
+                  ) : slotsLoading ? (
+                    <div className="flex h-40 items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+                    </div>
+                  ) : slots.length === 0 ? (
+                    <div className="flex h-40 flex-col items-center justify-center text-white/25">
+                      <AlertCircle className="mb-2 h-10 w-10 opacity-30" />
+                      <p className="text-xs">No slots this day</p>
+                    </div>
+                  ) : (
+                    <div className="grid max-h-52 grid-cols-2 gap-1.5 overflow-y-auto pr-1">
+                      {slots.map((slot) => (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          disabled={!slot.isAvailable}
+                          onClick={() => setSelectedSlot(slot.time)}
+                          className={`slot-btn rounded-xl px-2 py-2 text-left text-xs ${
+                            !slot.isAvailable ? 'booked' : selectedSlot === slot.time ? 'selected' : ''
+                          }`}
+                        >
+                          <span className="font-medium">{formatTimeSlot(slot.time).split('–')[0].trim()}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {selectedDate && selectedSlot && (
+                <div className="mt-4 rounded-xl border border-zinc-700 bg-zinc-900/50 px-4 py-3 text-sm text-white/70">
+                  <span className="text-zinc-400">Price for this slot: </span>
+                  <span className="font-semibold text-white">
+                    ₹{getPackagePrice(pkg.id, selectedDate).toLocaleString('en-IN')}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-white/10 p-5">
+              <button
+                type="button"
+                disabled={!selectedDate || !selectedSlot || submitting}
+                onClick={handleAdd}
+                className="btn-primary flex w-full items-center justify-center gap-2 py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <CheckCircle2 className="h-5 w-5" />}
+                Add to cart
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}

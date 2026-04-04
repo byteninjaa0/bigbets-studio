@@ -45,24 +45,23 @@ export default function Features() {
           <div className="section-divider mt-6" />
         </motion.div>
 
-        {/* Equipment — badge row */}
+        {/* Equipment — single column on mobile, centered chips from sm+ */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-10 md:mb-14"
         >
-          <p className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">Kit we run</p>
-          <div className="mx-auto flex max-w-3xl flex-wrap justify-center gap-2">
+          <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">Kit we run</p>
+          <ul className="mx-auto flex max-w-2xl list-none flex-col items-stretch gap-2.5 sm:max-w-3xl sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2">
             {siteConfig.equipmentDetails.map((item) => (
-              <span
-                key={item}
-                className="inline-flex items-center rounded-full border border-zinc-700 bg-zinc-950/80 px-3.5 py-1.5 text-xs text-zinc-300"
-              >
-                {item}
-              </span>
+              <li key={item} className="w-full min-w-0 sm:w-auto sm:max-w-[calc(100%-0.5rem)]">
+                <span className="flex min-h-[2.75rem] w-full items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/80 px-4 py-2.5 text-center text-xs leading-snug text-zinc-300 sm:min-h-0 sm:inline-flex sm:rounded-full sm:px-3.5 sm:py-2">
+                  {item}
+                </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </motion.div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
@@ -73,15 +72,15 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.05 }}
-              className="group flex h-full flex-col card-dark p-5 sm:p-6"
+              className="group flex min-w-0 h-full flex-col card-dark p-5 sm:p-6"
             >
               <div
-                className={`mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${feat.color} transition-transform duration-200 group-hover:scale-[1.06]`}
+                className={`mb-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${feat.color} transition-transform duration-200 group-hover:scale-[1.06]`}
               >
                 <feat.icon className="h-5 w-5 text-white/80" />
               </div>
               <h3 className="mb-1.5 text-sm font-semibold text-white">{feat.title}</h3>
-              <p className="flex-1 text-xs leading-relaxed text-white/40">{feat.desc}</p>
+              <p className="min-w-0 flex-1 text-xs leading-relaxed text-white/40">{feat.desc}</p>
             </motion.div>
           ))}
         </div>

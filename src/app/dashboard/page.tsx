@@ -122,7 +122,9 @@ export default function DashboardPage() {
 
   const upcoming = bookings.filter((b) => b.status !== 'cancelled' && new Date(b.date) >= new Date());
   const past = bookings.filter((b) => b.status === 'cancelled' || new Date(b.date) < new Date());
-  const totalSpent = bookings.filter((b) => b.paymentStatus === 'paid').reduce((s, b) => s + b.amount, 0);
+  const totalSpent = bookings
+    .filter((b) => b.paymentStatus === 'paid' && b.status !== 'cancelled')
+    .reduce((s, b) => s + b.amount, 0);
 
   if (status === 'loading' || loading) {
     return (
@@ -273,14 +275,14 @@ function BookingCard({ booking, onCancel, cancellingId, index, isPast = false }:
       transition={{ delay: index * 0.06 }}
       className="card-dark p-5"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <div className="w-11 h-11 rounded-xl bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center flex-shrink-0">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-1 items-start gap-4">
+          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-zinc-500/20 bg-zinc-500/10">
             <Mic2 className="w-5 h-5 text-zinc-400" />
           </div>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <p className="font-semibold text-white">{booking.packageName}</p>
+          <div className="min-w-0">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
+              <p className="font-semibold text-white break-words">{booking.packageName}</p>
               <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border ${cfg.color}`}>
                 <StatusIcon className="w-3 h-3" />
                 {cfg.label}

@@ -35,7 +35,7 @@ export default function SocialProof() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.05 }}
-              className="rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-2 py-4 text-center transition-all duration-200 hover:border-zinc-700/90 hover:bg-zinc-950/60 sm:px-3"
+              className="min-w-0 rounded-xl border border-zinc-800/80 bg-zinc-950/40 px-2 py-4 text-center transition-all duration-200 hover:border-zinc-700/90 hover:bg-zinc-950/60 sm:px-3"
             >
               <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-700/80 bg-zinc-900/50">
                 <p.icon className="h-4 w-4 text-zinc-400" />

@@ -19,7 +19,7 @@ function navItemIsActive(pathname: string, href: string): boolean {
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const { item } = useCart();
+  const cartCount = useCart((s) => s.items.length);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -123,15 +123,15 @@ export default function Navbar() {
 
           {/* Actions — isolate above page content; hamburger stays high-contrast on scroll */}
           <div className="relative z-[1] flex shrink-0 items-center gap-2 sm:gap-3">
-            {item && (
+            {cartCount > 0 && (
               <Link
                 href="/booking"
                 className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-zinc-950 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 sm:h-11 sm:w-11"
-                aria-label="Continue booking"
+                aria-label={`Cart, ${cartCount} session${cartCount !== 1 ? 's' : ''}`}
               >
                 <ShoppingCart className="h-5 w-5 text-zinc-200" />
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-black">
-                  1
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1.25rem] items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-black">
+                  {cartCount > 9 ? '9+' : cartCount}
                 </span>
               </Link>
             )}
@@ -300,6 +300,16 @@ export default function Navbar() {
                 </ul>
 
                 <div className="mt-auto space-y-3 border-t border-white/10 pt-6">
+                  {cartCount > 0 && (
+                    <Link
+                      href="/booking"
+                      onClick={closeMobile}
+                      className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-500/40 bg-zinc-900 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      Cart ({cartCount})
+                    </Link>
+                  )}
                   <Link
                     href="/booking"
                     onClick={closeMobile}

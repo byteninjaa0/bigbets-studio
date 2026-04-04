@@ -5,7 +5,9 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { bookingWithLegacyId } from '@/lib/booking-serialize';
 import { getSessionUserId } from '@/lib/session-user';
+import { format } from 'date-fns';
 import { jsonError, jsonOk, logApiError } from '@/lib/api-response';
+import { queueBookingCancellationEmails } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -105,6 +107,17 @@ export async function DELETE(req: NextRequest) {
     await prisma.slot.updateMany({
       where: { date: dateStr, time: booking.timeSlot },
       data: { isBooked: false, bookingId: null },
+    });
+
+    const dateFormatted = format(booking.date, 'EEEE, MMMM d, yyyy');
+    queueBookingCancellationEmails({
+      userName: booking.userName,
+      userEmail: booking.userEmail,
+      packageName: booking.packageName,
+      dateFormatted,
+      timeSlot: booking.timeSlot,
+      bookingRef: booking.id.slice(-8).toUpperCase(),
+      amount: booking.amount,
     });
 
     return jsonOk({ message: 'Booking cancelled.' });

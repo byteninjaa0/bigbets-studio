@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
           prisma.booking.count({ where: { status: 'confirmed' } }),
           prisma.user.count(),
           prisma.booking.aggregate({
-            where: { paymentStatus: 'paid' },
+            where: { paymentStatus: 'paid', status: { not: 'cancelled' } },
             _sum: { amount: true },
           }),
           prisma.booking.count({ where: { createdAt: { gte: today } } }),
@@ -57,14 +57,14 @@ export async function GET(req: NextRequest) {
                 SUM(amount) AS revenue,
                 COUNT(*)::int AS count
               FROM "Booking"
-              WHERE "paymentStatus" = 'paid' AND "createdAt" >= ${sixMonthsAgo}
+              WHERE "paymentStatus" = 'paid' AND "status" <> 'cancelled' AND "createdAt" >= ${sixMonthsAgo}
               GROUP BY EXTRACT(MONTH FROM "createdAt"), EXTRACT(YEAR FROM "createdAt")
               ORDER BY year, month
             `
           ),
           prisma.booking.groupBy({
             by: ['package'],
-            where: { paymentStatus: 'paid' },
+            where: { paymentStatus: 'paid', status: { not: 'cancelled' } },
             _sum: { amount: true },
             _count: { _all: true },
           }),
