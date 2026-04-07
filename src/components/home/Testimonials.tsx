@@ -69,14 +69,12 @@ export default function Testimonials() {
           viewport={{ once: true }}
           className="mb-12 text-center md:mb-16"
         >
-          <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
-            Testimonials
-          </span>
-          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <span className="section-eyebrow">Testimonials</span>
+          <h2 className="heading-section mb-4">
             From Recent{' '}
             <span className="text-gradient-gold italic">Sessions</span>
           </h2>
-          <p className="mx-auto max-w-xl text-base text-white/50 sm:text-lg">
+          <p className="text-section-lead mx-auto max-w-xl">
             Paraphrased feedback from guests who recorded at our Crossing Republik studio. Names initials only for privacy.
           </p>
           <div className="section-divider mt-6" />

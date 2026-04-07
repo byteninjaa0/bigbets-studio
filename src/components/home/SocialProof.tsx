@@ -41,7 +41,7 @@ export default function SocialProof() {
                 <p.icon className="h-4 w-4 text-zinc-400" />
               </div>
               <p className="font-sans text-xs font-bold leading-tight text-white sm:text-sm">{p.label}</p>
-              <p className="mt-1 break-words text-[11px] leading-snug text-white/35 sm:text-xs">{p.sub}</p>
+              <p className="mt-1 break-words text-[11px] leading-snug text-zinc-500 sm:text-xs">{p.sub}</p>
             </motion.div>
           ))}
         </motion.div>

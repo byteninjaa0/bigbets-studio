@@ -153,10 +153,8 @@ export default function DashboardPage() {
               }
             </div>
             <div>
-              <h1 className="font-sans font-black text-3xl text-white">
-                Hey, {session?.user?.name?.split(' ')[0]}! 👋
-              </h1>
-              <p className="text-white/40 text-sm">{session?.user?.email}</p>
+              <h1 className="heading-page">Hey, {session?.user?.name?.split(' ')[0]}!</h1>
+              <p className="text-sm text-zinc-500">{session?.user?.email}</p>
             </div>
           </div>
         </motion.div>
@@ -213,8 +211,8 @@ export default function DashboardPage() {
           className="glass-gold rounded-2xl p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div>
-            <h3 className="font-sans font-bold text-xl text-white mb-1">Ready for your next session? 🎙️</h3>
-            <p className="text-white/50 text-sm">Slots are filling fast. Book yours now!</p>
+            <h3 className="heading-sub mb-1">Ready for your next session?</h3>
+            <p className="text-sm text-zinc-500">Slots are filling fast. Book yours now!</p>
           </div>
           <Link href="/booking" className="btn-primary w-full justify-center whitespace-nowrap sm:w-auto">
             Book a Session <ArrowRight className="w-4 h-4" />
@@ -225,8 +223,8 @@ export default function DashboardPage() {
         {bookings.length === 0 ? (
           <div className="text-center py-20">
             <Mic2 className="w-16 h-16 text-white/10 mx-auto mb-4" />
-            <h3 className="font-sans font-bold text-2xl text-white/40 mb-2">No bookings yet</h3>
-            <p className="text-white/25 text-sm mb-6">Your first session is just a click away.</p>
+            <h3 className="mb-2 text-lg font-semibold text-zinc-500">No bookings yet</h3>
+            <p className="mb-6 text-sm text-zinc-600">Your first session is just a click away.</p>
             <Link href="/booking" className="btn-primary mx-auto inline-flex w-full max-w-xs justify-center sm:w-auto">
               Book Your First Session
             </Link>
@@ -235,7 +233,7 @@ export default function DashboardPage() {
           <div className="space-y-8">
             {upcoming.length > 0 && (
               <section>
-                <h2 className="font-semibold text-white/60 text-sm uppercase tracking-widest mb-4">Upcoming Sessions</h2>
+                <h2 className="heading-list-label mb-4">Upcoming Sessions</h2>
                 <div className="space-y-3">
                   {upcoming.map((booking, i) => (
                     <BookingCard key={booking._id} booking={booking} onCancel={handleCancel} cancellingId={cancellingId} index={i} />
@@ -245,7 +243,7 @@ export default function DashboardPage() {
             )}
             {past.length > 0 && (
               <section>
-                <h2 className="font-semibold text-white/60 text-sm uppercase tracking-widest mb-4">Past Sessions</h2>
+                <h2 className="heading-list-label mb-4">Past Sessions</h2>
                 <div className="space-y-3 opacity-70">
                   {past.map((booking, i) => (
                     <BookingCard key={booking._id} booking={booking} onCancel={handleCancel} cancellingId={cancellingId} index={i} isPast />

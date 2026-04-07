@@ -6,6 +6,7 @@ import { X, Loader2, CheckCircle2, AlertCircle, Package, Calendar, Clock, Credit
 import axios from 'axios';
 import { apiMessage } from '@/lib/api-message';
 import { simulatePayment } from '@/lib/mock-payment';
+import { paymentModalNoticeText } from '@/config/payment-mode';
 
 type Phase = 'summary' | 'processing' | 'success' | 'failure';
 
@@ -139,6 +140,7 @@ export function MockPaymentModal({
   };
 
   const displayTotal = amount ?? 0;
+  const modalNotice = paymentModalNoticeText();
 
   return (
     <AnimatePresence>
@@ -158,7 +160,7 @@ export function MockPaymentModal({
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-labelledby="mock-payment-title"
+            aria-labelledby="checkout-payment-title"
             className="relative w-full max-w-md rounded-3xl border border-white/[0.08] bg-zinc-950/95 shadow-2xl shadow-black/60 overflow-hidden"
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -166,7 +168,7 @@ export function MockPaymentModal({
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           >
             <div className="flex items-center justify-between px-6 pt-5 pb-2">
-              <h2 id="mock-payment-title" className="font-sans text-xl font-black tracking-tight text-white">
+              <h2 id="checkout-payment-title" className="heading-dialog">
                 Complete payment
               </h2>
               {phase !== 'processing' && (
@@ -190,9 +192,11 @@ export function MockPaymentModal({
                     exit={{ opacity: 0, y: -6 }}
                     className="space-y-5"
                   >
-                    <p className="text-xs text-white/35 leading-relaxed border border-white/[0.06] rounded-2xl px-4 py-3 bg-white/[0.02]">
-                      This is a demo payment. No real transaction will occur.
-                    </p>
+                    {modalNotice ? (
+                      <p className="text-xs text-white/35 leading-relaxed border border-white/[0.06] rounded-2xl px-4 py-3 bg-white/[0.02]">
+                        {modalNotice}
+                      </p>
+                    ) : null}
 
                     <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 space-y-3">
                       {[
@@ -296,8 +300,8 @@ export function MockPaymentModal({
                     >
                       <CheckCircle2 className="w-9 h-9" />
                     </motion.div>
-                    <h3 className="mb-2 font-sans text-2xl font-black text-white">Payment successful 🎉</h3>
-                    <p className="text-white/45 text-sm">Your booking is confirmed.</p>
+                    <h3 className="heading-emphasis mb-2">Payment successful</h3>
+                    <p className="text-sm text-zinc-500">Your booking is confirmed.</p>
                   </motion.div>
                 )}
 
@@ -312,8 +316,8 @@ export function MockPaymentModal({
                       <AlertCircle className="w-7 h-7 text-zinc-400" />
                     </div>
                     <div>
-                      <h3 className="mb-1 font-sans text-lg font-bold text-white">Payment failed</h3>
-                      <p className="text-white/45 text-sm">Please try again.</p>
+                      <h3 className="heading-sub mb-1">Payment failed</h3>
+                      <p className="text-sm text-zinc-500">Please try again.</p>
                     </div>
                     <button
                       type="button"

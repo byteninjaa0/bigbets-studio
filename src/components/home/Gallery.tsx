@@ -60,13 +60,11 @@ export default function Gallery() {
           viewport={{ once: true }}
           className="mb-8 text-center md:mb-12"
         >
-          <span className="glass-gold mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-            Studio Gallery
-          </span>
-          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <span className="section-eyebrow">Studio Gallery</span>
+          <h2 className="heading-section mb-4">
             See Our <span className="text-gradient-gold italic">Space</span>
           </h2>
-          <p className="mx-auto max-w-xl break-words px-1 text-sm leading-relaxed text-white/45">
+          <p className="mx-auto max-w-xl break-words px-1 text-sm leading-relaxed text-zinc-500">
             Real photos from our Ghaziabad studio. Update them anytime to match your latest setup.
           </p>
           <div className="section-divider mt-6" />

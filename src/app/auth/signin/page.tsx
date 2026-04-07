@@ -219,10 +219,10 @@ function SignInPageInner() {
     >
       <Card className="rounded-3xl border-white/[0.08] bg-white/[0.03] backdrop-blur-xl shadow-2xl shadow-black/40">
         <CardHeader className="space-y-1 text-center pb-2">
-          <CardTitle className="font-sans text-3xl font-black tracking-tight text-white">
+          <CardTitle className="heading-page">
             {registerMode ? 'Create account' : 'Welcome back'}
           </CardTitle>
-          <CardDescription className="text-base text-white/40">
+          <CardDescription className="text-base text-zinc-500">
             {registerMode
               ? 'We’ll email you a one-time code — no password to remember.'
               : 'Sign in with a one-time code sent to your email.'}

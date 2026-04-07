@@ -151,7 +151,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
             className="relative z-10 flex max-h-[min(92vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-zinc-950 shadow-2xl sm:rounded-3xl"
           >
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <h2 id="add-cart-title" className="font-sans text-lg font-black text-white">
+              <h2 id="add-cart-title" className="heading-dialog text-lg sm:text-xl">
                 Add {pkg.name}
               </h2>
               <button
@@ -174,7 +174,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                   <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
                     <Calendar className="h-4 w-4 text-zinc-400" /> Date
                   </h3>
-                  <div className="flex justify-center">
+                  <div className="rdp-booking-calendar flex justify-center overflow-x-auto">
                     <DayPicker
                       mode="single"
                       selected={selectedDate}
@@ -182,24 +182,32 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                       disabled={isDisabledDay}
                       fromDate={new Date()}
                       toDate={addDays(new Date(), 60)}
-                      className="text-white"
                       classNames={{
-                        months: 'flex flex-col',
-                        month: 'space-y-3',
-                        caption: 'flex justify-between items-center mb-2 text-white text-sm font-semibold',
-                        nav: 'flex items-center gap-1',
+                        root: 'rdp !m-0 !p-0 text-white',
+                        months: 'rdp-months',
+                        month: 'rdp-month !mx-auto !my-0',
+                        caption: 'rdp-caption mb-2 text-white',
+                        caption_label: 'rdp-caption_label !text-sm font-semibold text-white',
+                        nav: 'rdp-nav',
                         nav_button:
-                          'w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:bg-white/8 hover:text-white transition-all',
-                        table: 'w-full border-collapse',
-                        head_row: 'flex mb-1',
-                        head_cell: 'w-9 text-center text-white/30 text-[10px] font-medium',
-                        row: 'flex w-full mt-0.5',
-                        cell: 'relative w-9 h-9 flex items-center justify-center',
-                        day: 'w-8 h-8 rounded-lg text-xs font-medium text-white/70 hover:bg-zinc-500/15 cursor-pointer',
-                        day_selected: 'bg-white text-black font-bold',
-                        day_today: 'border border-zinc-500/40 text-zinc-400',
-                        day_disabled: 'text-white/15 cursor-not-allowed hover:bg-transparent',
-                        day_outside: 'text-white/15',
+                          'rdp-nav_button !h-8 !w-8 rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white',
+                        nav_button_previous: 'rdp-nav_button_previous',
+                        nav_button_next: 'rdp-nav_button_next',
+                        table: 'rdp-table w-full border-collapse',
+                        head: 'rdp-head',
+                        head_row: 'rdp-head_row',
+                        head_cell:
+                          'rdp-head_cell !h-9 !w-9 text-center text-[10px] font-semibold uppercase tracking-wide text-white/35',
+                        tbody: 'rdp-tbody',
+                        row: 'rdp-row',
+                        cell: 'rdp-cell !p-0',
+                        day: 'rdp-day !text-xs font-medium text-white/75',
+                        day_selected: 'rdp-day_selected !font-bold',
+                        day_today: 'rdp-day_today !font-semibold !text-zinc-300',
+                        day_disabled: 'rdp-day_disabled !cursor-not-allowed !text-white/20',
+                        day_outside: 'rdp-day_outside text-white/20',
+                        button: 'rdp-button',
+                        button_reset: 'rdp-button_reset',
                       }}
                     />
                   </div>

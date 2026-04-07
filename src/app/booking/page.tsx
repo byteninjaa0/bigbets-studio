@@ -30,6 +30,7 @@ import { AddPackageToCartModal } from '@/components/booking/AddPackageToCartModa
 import { PageContainer } from '@/components/layout/PageContainer';
 import { FieldInput } from '@/components/ui/field-input';
 import { scrollIntoViewSmooth } from '@/lib/scroll-into-view-smooth';
+import { paymentCheckoutFooterText } from '@/config/payment-mode';
 
 type Step = 'cart' | 'package' | 'checkout' | 'success';
 
@@ -194,8 +195,8 @@ export default function BookingPage() {
               <ArrowLeft className="h-4 w-4" />
             </button>
           )}
-          <h1 className="font-sans text-3xl font-black text-white sm:text-4xl">
-            {step === 'success' ? 'Booking Confirmed! 🎉' : 'Book Your Session'}
+          <h1 className="heading-page">
+            {step === 'success' ? 'Booking confirmed' : 'Book Your Session'}
           </h1>
         </div>
 
@@ -294,7 +295,7 @@ export default function BookingPage() {
 
         {step === 'package' && (
           <motion.div key="package" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-            <p className="mb-6 text-center text-sm text-white/45">
+            <p className="mb-6 text-center text-sm text-zinc-500">
               Choose a package, then pick date &amp; time in the next step. Everything is saved to your cart.
             </p>
             <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -322,8 +323,8 @@ export default function BookingPage() {
                         {pkg.badge}
                       </span>
                     )}
-                    <h3 className="mb-1 font-sans text-2xl font-black text-white">{pkg.name}</h3>
-                    <p className="mb-4 text-sm text-white/40">{pkg.tagline}</p>
+                    <h3 className="heading-product mb-1">{pkg.name}</h3>
+                    <p className="mb-4 text-sm text-zinc-500">{pkg.tagline}</p>
                     <div className="mb-4 text-3xl font-black text-gradient-gold">₹{pkg.price.toLocaleString('en-IN')}</div>
                     <ul className="mb-6 space-y-2">
                       {pkg.features.slice(0, 5).map((f) => (
@@ -356,7 +357,7 @@ export default function BookingPage() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
               <div className="space-y-5 lg:col-span-3">
                 <div className="card-dark p-6">
-                  <h3 className="mb-5 font-semibold text-white">Booking Summary</h3>
+                  <h3 className="heading-panel mb-5">Booking Summary</h3>
                   <div className="space-y-4">
                     {[
                       { label: 'Package', value: activeLine.packageName, icon: Package },
@@ -369,7 +370,7 @@ export default function BookingPage() {
                           <Icon className="h-4 w-4 text-zinc-400/70" />
                         </div>
                         <div>
-                          <p className="text-xs text-white/40">{label}</p>
+                          <p className="text-xs text-zinc-500">{label}</p>
                           <p className="text-sm font-medium text-white/90">{value}</p>
                         </div>
                       </div>
@@ -378,7 +379,7 @@ export default function BookingPage() {
                 </div>
 
                 <div className="card-dark p-6">
-                  <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
+                  <h3 className="heading-panel mb-4 flex items-center gap-2">
                     <Tag className="h-4 w-4 text-zinc-400" /> Have a Coupon?
                   </h3>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
@@ -402,7 +403,7 @@ export default function BookingPage() {
                       disabled={!couponCode || couponLoading || !!couponResult}
                       className="min-h-[3rem] shrink-0 whitespace-nowrap rounded-xl border border-zinc-500/30 px-5 text-sm font-medium text-zinc-400 transition-all duration-200 hover:bg-zinc-500/10 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : couponResult ? '✓ Applied' : 'Apply'}
+                      {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : couponResult ? 'Applied' : 'Apply'}
                     </button>
                   </div>
                   {couponResult && (
@@ -415,15 +416,15 @@ export default function BookingPage() {
 
                 <div className="flex gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-4">
                   <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-500" />
-                  <p className="text-xs leading-relaxed text-white/40">
-                    Free cancellation up to 24 hours before your session. Demo payment — no real charge.
+                  <p className="text-xs leading-relaxed text-zinc-500">
+                    Free cancellation up to 24 hours before your session.
                   </p>
                 </div>
               </div>
 
               <div className="lg:col-span-2">
                 <div className="card-dark sticky top-28 p-6">
-                  <h3 className="mb-5 font-semibold text-white">Order Total</h3>
+                  <h3 className="heading-panel mb-5">Order Total</h3>
                   <div className="mb-5 space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-white/50">Package Price</span>
@@ -449,7 +450,7 @@ export default function BookingPage() {
                     <CreditCard className="h-5 w-5" />
                     Proceed to payment
                   </button>
-                  <p className="mt-4 text-center text-xs leading-relaxed text-white/25">Demo checkout with a short delay.</p>
+                  <p className="mt-4 text-center text-xs leading-relaxed text-zinc-500">{paymentCheckoutFooterText()}</p>
                 </div>
               </div>
             </div>
@@ -472,8 +473,8 @@ export default function BookingPage() {
             >
               <CheckCircle2 className="h-12 w-12 text-white" />
             </motion.div>
-            <h2 className="mb-3 font-sans text-4xl font-black text-white">You&apos;re Booked! 🎙️</h2>
-            <p className="mb-8 text-base leading-relaxed text-white/50">
+            <h2 className="heading-section mb-3">You&apos;re booked</h2>
+            <p className="text-section-lead mb-8">
               Your studio session is confirmed. Check your email for details.
             </p>
             <div className="glass-gold mb-8 rounded-2xl p-5">

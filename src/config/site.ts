@@ -5,6 +5,8 @@
 
 export const siteConfig = {
   name: 'BigBets Studio',
+  /** Brand mark — `public/photos/logo.jpeg` */
+  logoPath: '/photos/log.jpeg',
   shortDescription:
     'Podcast and video recording studio in Crossing Republik, Ghaziabad — book online, record with pro audio and multi-cam switching.',
 

@@ -16,10 +16,8 @@ export default function StudioPage() {
       <div className="pt-16 sm:pt-[4.5rem]">
         <section className="border-b border-white/[0.06] py-12 md:py-16">
           <PageContainer>
-            <h1 className="font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
-              The studio
-            </h1>
-            <p className="mt-4 max-w-2xl text-base text-white/55 sm:text-lg">
+            <h1 className="heading-page">The studio</h1>
+            <p className="text-section-lead mt-4 max-w-2xl">
               Treated room, pro mics, ATEM Mini Pro switching, and a 4K pipeline — everything we run for your session.
             </p>
           </PageContainer>

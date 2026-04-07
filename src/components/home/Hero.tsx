@@ -60,7 +60,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mb-6 font-sans text-[clamp(2.25rem,6.5vw,5.5rem)] font-black leading-[1.05] tracking-tight"
+            className="heading-hero mb-6"
           >
             <span className="text-white">Book Your</span>
             <br />
@@ -73,7 +73,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-8 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg md:text-xl"
+            className="text-section-lead mb-8 max-w-2xl"
           >
             Professional podcast and video recording at Panchsheel Wellington. We run a{' '}
             <span className="text-white/90 font-medium">{siteConfig.equipment[0]}</span> switching setup with a 4K

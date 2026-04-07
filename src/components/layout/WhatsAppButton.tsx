@@ -22,7 +22,7 @@ export default function WhatsAppButton() {
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
             className="glass border border-white/10 rounded-2xl p-4 max-w-[220px] shadow-2xl"
           >
-            <p className="text-sm font-semibold text-white mb-1">💬 Chat with us!</p>
+            <p className="text-sm font-semibold text-white mb-1">Chat with us</p>
             <p className="text-xs text-white/60 leading-relaxed">
               Get instant answers about booking, packages & availability.
             </p>

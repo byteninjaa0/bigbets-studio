@@ -1,11 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { getPackagePrice, PACKAGES } from '@/lib/packages';
+import { computeDiscountFromCoupon, couponEligibleForPackageAndAmount } from '@/lib/coupon-apply';
 
 export type BookingQuote = {
   amount: number;
   originalAmount: number;
   discountApplied: number;
   packageName: string;
+  /** True when a valid coupon row was applied (used for incrementing usedCount on confirm). */
+  didApplyCoupon: boolean;
 };
 
 export async function computeBookingQuote(
@@ -19,6 +22,7 @@ export async function computeBookingQuote(
   const originalAmount = getPackagePrice(packageId, new Date(date));
   let amount = originalAmount;
   let discountApplied = 0;
+  let didApplyCoupon = false;
 
   if (couponCode?.trim()) {
     const coupon = await prisma.coupon.findFirst({
@@ -29,13 +33,13 @@ export async function computeBookingQuote(
       },
     });
 
-    if (coupon && coupon.usedCount < coupon.maxUses && amount >= coupon.minAmount) {
-      if (coupon.discountType === 'percentage') {
-        discountApplied = Math.round((amount * coupon.discountValue) / 100);
-      } else {
-        discountApplied = coupon.discountValue;
+    if (coupon) {
+      const eligible = couponEligibleForPackageAndAmount(coupon, packageId, originalAmount);
+      if (eligible.ok) {
+        discountApplied = computeDiscountFromCoupon(coupon, originalAmount);
+        amount = Math.max(0, originalAmount - discountApplied);
+        didApplyCoupon = true;
       }
-      amount = Math.max(0, amount - discountApplied);
     }
   }
 
@@ -44,5 +48,6 @@ export async function computeBookingQuote(
     originalAmount,
     discountApplied,
     packageName: pkg.name,
+    didApplyCoupon,
   };
 }

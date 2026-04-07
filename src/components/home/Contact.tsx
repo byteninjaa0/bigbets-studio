@@ -52,14 +52,12 @@ export default function Contact() {
           viewport={{ once: true }}
           className="mb-12 text-center md:mb-16"
         >
-          <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
-            Get In Touch
-          </span>
-          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <span className="section-eyebrow">Get In Touch</span>
+          <h2 className="heading-section mb-4">
             Find Us &{' '}
             <span className="text-gradient-gold italic">Say Hello</span>
           </h2>
-          <p className="text-white/45 text-sm max-w-lg mx-auto">
+          <p className="mx-auto max-w-lg text-sm text-zinc-500">
             Call, email, or WhatsApp — we&apos;ll help you pick a package and a time slot.
           </p>
           <div className="section-divider mt-6" />
@@ -85,7 +83,7 @@ export default function Contact() {
                   <row.icon className="w-5 h-5 text-zinc-400" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-1">{row.label}</p>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">{row.label}</p>
                   {row.href ? (
                     <a
                       href={row.href}

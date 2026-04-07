@@ -1,21 +1,15 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
-import type { Session } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { Prisma, BookingStatus } from '@prisma/client';
 import { bookingWithLegacyId } from '@/lib/booking-serialize';
 import { jsonError, jsonOk, logApiError, parseJsonBody } from '@/lib/api-response';
+import { sessionIsAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 const PATH = '/api/admin';
-
-function sessionIsAdmin(session: Session) {
-  const adminEmails = process.env.ADMIN_EMAILS?.split(',').map((e) => e.trim()) || [];
-  const email = session.user?.email;
-  return Boolean(session.user?.isAdmin || (email && adminEmails.includes(email)));
-}
 
 export async function GET(req: NextRequest) {
   try {
@@ -94,23 +88,25 @@ export async function GET(req: NextRequest) {
     }
 
     if (type === 'bookings') {
-      const page = parseInt(searchParams.get('page') || '1', 10);
       const limit = 20;
+      const total = await prisma.booking.count();
+      const pages = Math.max(1, Math.ceil(total / limit));
+      const rawPage = parseInt(searchParams.get('page') || '1', 10) || 1;
+      const page = Math.min(Math.max(1, rawPage), pages);
       const skip = (page - 1) * limit;
 
-      const [bookings, total] = await Promise.all([
-        prisma.booking.findMany({
-          orderBy: { createdAt: 'desc' },
-          skip,
-          take: limit,
-        }),
-        prisma.booking.count(),
-      ]);
+      const bookings = await prisma.booking.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      });
 
       return jsonOk({
         bookings: bookings.map(bookingWithLegacyId),
         total,
-        pages: Math.ceil(total / limit),
+        page,
+        pages,
+        limit,
       });
     }
 
@@ -188,10 +184,26 @@ export async function PATCH(req: NextRequest) {
       return jsonError('Invalid booking status.', 400);
     }
 
-    await prisma.booking.update({
-      where: { id: bookingId },
-      data: { status: status as BookingStatus },
+    const nextStatus = status as BookingStatus;
+
+    const existing = await prisma.booking.findUnique({ where: { id: bookingId } });
+    if (!existing) {
+      return jsonError('Booking not found.', 404);
+    }
+
+    await prisma.$transaction(async (tx) => {
+      await tx.booking.update({
+        where: { id: bookingId },
+        data: { status: nextStatus },
+      });
+      if (nextStatus === 'cancelled') {
+        await tx.slot.updateMany({
+          where: { bookingId },
+          data: { isBooked: false, bookingId: null },
+        });
+      }
     });
+
     return jsonOk({ message: 'Booking status updated.' });
   } catch (error) {
     logApiError('PATCH', PATH, 'Failed to update booking', error);

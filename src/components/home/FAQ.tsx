@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { paymentFaqInstallmentsAnswer } from '@/config/payment-mode';
 
 const faqs = [
   {
@@ -31,7 +32,7 @@ const faqs = [
   },
   {
     q: 'Can I pay in installments or via UPI?',
-    a: 'Checkout uses a secure demo payment flow (no real charge). Full confirmation is required at the time of booking.',
+    a: paymentFaqInstallmentsAnswer(),
   },
   {
     q: 'Do you provide teleprompter or script support?',
@@ -56,13 +57,11 @@ export default function FAQ() {
           viewport={{ once: true }}
           className="mb-10 text-center md:mb-14"
         >
-          <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
-            FAQ
-          </span>
-          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <span className="section-eyebrow">FAQ</span>
+          <h2 className="heading-section mb-4">
             Got <span className="text-gradient-gold italic">Questions?</span>
           </h2>
-          <p className="text-base text-white/50">Everything you need to know before booking.</p>
+          <p className="text-section-lead text-center">Everything you need to know before booking.</p>
           <div className="section-divider mt-6" />
         </motion.div>
 
@@ -107,7 +106,7 @@ export default function FAQ() {
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <p className="px-5 pb-5 text-sm leading-relaxed text-white/55 break-words">{faq.a}</p>
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-zinc-400 break-words">{faq.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

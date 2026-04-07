@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
-import type { Session } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { bookingWithLegacyId } from '@/lib/booking-serialize';
@@ -8,16 +7,11 @@ import { getSessionUserId } from '@/lib/session-user';
 import { format } from 'date-fns';
 import { jsonError, jsonOk, logApiError } from '@/lib/api-response';
 import { queueBookingCancellationEmails } from '@/lib/email';
+import { sessionIsAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 const ADMIN_ALL_CAP = 500;
-
-function sessionIsAdmin(session: Session) {
-  const adminEmails = process.env.ADMIN_EMAILS?.split(',').map((e) => e.trim()) || [];
-  const email = session.user?.email;
-  return Boolean(session.user?.isAdmin || (email && adminEmails.includes(email)));
-}
 
 export async function GET(req: NextRequest) {
   const path = '/api/bookings';

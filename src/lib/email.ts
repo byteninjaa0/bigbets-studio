@@ -60,7 +60,6 @@ export async function sendBookingConfirmation(booking: {
       .logo { font-size: 28px; font-weight: 900; color: #fafafa; letter-spacing: -1px; }
       .confirmed-badge { background: #fafafa; color: #000000; font-size: 11px; letter-spacing: 2px; font-weight: 700; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-top: 12px; }
       .body { padding: 40px 32px; }
-      .success-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
       .title { color: #fff; font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 8px; }
       .subtitle { color: #888; font-size: 14px; text-align: center; margin-bottom: 32px; }
       .booking-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 24px; }
@@ -81,10 +80,9 @@ export async function sendBookingConfirmation(booking: {
     <div class="container">
       <div class="header">
         <div class="logo">BigBets Studio</div>
-        <div class="confirmed-badge">✓ BOOKING CONFIRMED</div>
+        <div class="confirmed-badge">BOOKING CONFIRMED</div>
       </div>
       <div class="body">
-        <div class="success-icon">🎙️</div>
         <div class="title">You're All Set, ${booking.userName}!</div>
         <div class="subtitle">Your podcast session has been confirmed. See you at the studio!</div>
         
@@ -122,8 +120,8 @@ export async function sendBookingConfirmation(booking: {
       </div>
       <div class="footer">
         <div class="footer-text">
-          📍 803B Tower2A Panchsheel Wellington, Crossing Republik, Ghaziabad<br>
-          📧 ${siteConfig.email}<br><br>
+          803B Tower2A Panchsheel Wellington, Crossing Republik, Ghaziabad<br>
+          ${siteConfig.email}<br><br>
           Need to reschedule? Contact us at least 24 hours before your session.
         </div>
       </div>
@@ -135,7 +133,7 @@ export async function sendBookingConfirmation(booking: {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM || `"${siteConfig.name}" <${siteConfig.email}>`,
     to: booking.userEmail,
-    subject: `🎙️ Booking Confirmed – ${booking.date} at ${booking.timeSlot}`,
+    subject: `Booking confirmed – ${booking.date} at ${booking.timeSlot}`,
     html,
   });
 }
@@ -199,8 +197,8 @@ async function sendUserBookingCancellationEmail(
       </div>
       <div class="footer">
         <div class="footer-text">
-          📍 803B Tower2A Panchsheel Wellington, Crossing Republik, Ghaziabad<br/>
-          📧 ${escapeHtml(siteConfig.email)}
+          803B Tower2A Panchsheel Wellington, Crossing Republik, Ghaziabad<br/>
+          ${escapeHtml(siteConfig.email)}
         </div>
       </div>
     </div>

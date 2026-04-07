@@ -20,10 +20,8 @@ export default function HowItWorks() {
           viewport={{ once: true }}
           className="mb-12 text-center md:mb-16"
         >
-          <span className="glass-gold text-zinc-400 text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full inline-block mb-4">
-            How It Works
-          </span>
-          <h2 className="mb-4 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl">
+          <span className="section-eyebrow">How It Works</span>
+          <h2 className="heading-section mb-4">
             Book in{' '}
             <span className="text-gradient-gold italic">4 Simple</span>
             {' '}Steps
@@ -55,8 +53,8 @@ export default function HowItWorks() {
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="mb-2 font-sans text-lg font-bold text-white">{step.title}</h3>
-                <p className="mx-auto max-w-xs text-sm leading-relaxed text-white/50">{step.desc}</p>
+                <h3 className="heading-sub mb-2">{step.title}</h3>
+                <p className="mx-auto max-w-xs text-sm leading-relaxed text-zinc-500">{step.desc}</p>
               </motion.div>
             ))}
           </div>

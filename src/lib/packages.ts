@@ -32,7 +32,7 @@ export const PACKAGES = {
     duration: '1 Hour + Editing',
     color: 'from-zinc-800 to-zinc-950',
     accentColor: '#e4e4e7',
-    badge: '🔥 TRENDING',
+    badge: 'TRENDING',
     features: [
       'Everything in SET A',
       'Professional Video Editing',
@@ -58,7 +58,7 @@ export const PACKAGES = {
     duration: '1 Hour + Full Edit',
     color: 'from-stone-800 to-stone-900',
     accentColor: '#a1a1aa',
-    badge: '👑 PREMIUM',
+    badge: 'PREMIUM',
     features: [
       'Everything in SET B',
       '3 Extra Short-Form Videos',

@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic2, ShoppingCart, Menu, X, ChevronDown, LogOut, LayoutDashboard, Shield } from 'lucide-react';
+import { ShoppingCart, Menu, X, ChevronDown, LogOut, LayoutDashboard, Shield } from 'lucide-react';
 import { useCart } from '@/lib/cart-store';
 import { PageContainer } from './PageContainer';
 import { mainNavLinks } from '@/config/navigation';
+import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
 function navItemIsActive(pathname: string, href: string): boolean {
@@ -97,15 +99,17 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="group flex min-w-0 max-w-[55%] shrink-0 items-center gap-2 sm:max-w-none sm:gap-2.5"
+            aria-label={`${siteConfig.name} home`}
+            className="group flex min-w-0 shrink-0 items-center pr-1"
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600 shadow-lg transition-transform duration-200 group-hover:scale-[1.02]">
-              <Mic2 className="h-5 w-5 text-black" />
-            </div>
-            <span className="truncate font-sans text-base font-black tracking-tight text-white sm:text-lg md:text-xl">
-              <span className="text-gradient-gold">BigBets</span>
-              <span className="text-white"> Studio</span>
-            </span>
+            <Image
+              src={siteConfig.logoPath}
+              alt=""
+              width={240}
+              height={96}
+              className="h-10 w-auto max-h-10 max-w-[min(13rem,52vw)] object-contain object-left transition-opacity duration-200 group-hover:opacity-90 sm:h-12 sm:max-h-12 sm:max-w-[16rem] md:max-w-[18rem]"
+              priority
+            />
           </Link>
 
           {/* Desktop: centered nav — avoids flex squeeze hiding links */}
@@ -271,7 +275,7 @@ export default function Navbar() {
               aria-labelledby="mobile-nav-title"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <span id="mobile-nav-title" className="font-sans text-lg font-black text-white">
+                <span id="mobile-nav-title" className="heading-dialog">
                   Menu
                 </span>
                 <button

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { jsonError, jsonOk, logApiError, parseJsonBody } from '@/lib/api-response';
+import { computeDiscountFromCoupon, couponEligibleForPackageAndAmount } from '@/lib/coupon-apply';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,24 +34,16 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (!coupon || coupon.usedCount >= coupon.maxUses) {
+    if (!coupon) {
       return jsonError('Invalid or expired coupon code.', 400);
     }
 
-    if (coupon.applicablePackages.length > 0 && !coupon.applicablePackages.includes(String(packageId))) {
-      return jsonError('This coupon is not applicable for the selected package.', 400);
+    const eligible = couponEligibleForPackageAndAmount(coupon, String(packageId), numAmount);
+    if (!eligible.ok) {
+      return jsonError(eligible.message, 400);
     }
 
-    if (numAmount < coupon.minAmount) {
-      return jsonError(`Minimum order amount ₹${coupon.minAmount} required.`, 400);
-    }
-
-    let discount = 0;
-    if (coupon.discountType === 'percentage') {
-      discount = Math.round((numAmount * coupon.discountValue) / 100);
-    } else {
-      discount = coupon.discountValue;
-    }
+    const discount = computeDiscountFromCoupon(coupon, numAmount);
 
     const message = `Coupon applied! You save ₹${discount.toLocaleString('en-IN')}`;
 

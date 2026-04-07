@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Zap, ArrowRight, ShoppingCart } from 'lucide-react';
+import { Check, Zap, ArrowRight, ShoppingCart, Lock } from 'lucide-react';
 import { PACKAGES } from '@/lib/packages';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -20,7 +20,7 @@ export default function Packages() {
 
   const requireAuth = () => {
     if (!session) {
-      toast('Please sign in to continue', { icon: '🔐' });
+      toast('Please sign in to continue', { icon: <Lock className="h-4 w-4" /> });
       router.push('/auth/signin?callbackUrl=/booking');
       return false;
     }
@@ -61,16 +61,14 @@ export default function Packages() {
           transition={{ duration: 0.7 }}
           className="mb-12 text-center md:mb-16"
         >
-          <span className="glass-gold mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-bold tracking-[0.2em] text-zinc-400">
-            Our Packages
-          </span>
-          <h2 className="mb-5 font-sans text-3xl font-black text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <span className="section-eyebrow">Our Packages</span>
+          <h2 className="heading-section mb-5">
             Choose Your{' '}
             <span className="text-gradient-gold italic">Perfect</span>
             <br />
             Studio Package
           </h2>
-          <p className="mx-auto max-w-xl text-base text-white/50 sm:text-lg">
+          <p className="text-section-lead mx-auto max-w-xl">
             Every tier includes pro mics, treated room, lighting, and our ATEM Mini Pro multi-cam pipeline. Add editing where you need it.
           </p>
           <div className="section-divider mt-6" />
@@ -111,7 +109,7 @@ export default function Packages() {
                           {pkg.badge}
                         </span>
                       )}
-                      <h3 className="font-sans text-2xl font-black text-white">{pkg.name}</h3>
+                      <h3 className="heading-product">{pkg.name}</h3>
                       <p className="mt-0.5 text-sm text-white/40">{pkg.tagline}</p>
                     </div>
                     {isPopular && (

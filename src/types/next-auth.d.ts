@@ -17,5 +17,7 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     id?: string;
     isAdmin?: boolean;
+    /** Last time id/isAdmin were loaded from DB (ms). Used to throttle Prisma reads in jwt callback. */
+    profileRefreshedAt?: number;
   }
 }

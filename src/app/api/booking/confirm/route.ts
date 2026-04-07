@@ -1,12 +1,18 @@
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
+import { Prisma, type PackageType } from '@prisma/client';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { sendBookingConfirmation } from '@/lib/email';
 import { computeBookingQuote } from '@/lib/booking-pricing';
+import {
+  BOOKING_CONFIRM_MAX_ATTEMPTS,
+  isRetryableBookingConfirmError,
+  runConfirmBookingInTransaction,
+  SlotUnavailableError,
+} from '@/lib/booking-confirm-slot';
 import { PACKAGES, formatTimeSlot } from '@/lib/packages';
 import { format } from 'date-fns';
-import type { PackageType } from '@prisma/client';
 import { getSessionUserId } from '@/lib/session-user';
 import { jsonError, jsonOk, logApiError, parseJsonBody } from '@/lib/api-response';
 
@@ -46,17 +52,6 @@ export async function POST(req: NextRequest) {
       return jsonError('Invalid package.', 400);
     }
 
-    const existingSlot = await prisma.slot.findFirst({
-      where: {
-        date,
-        time: timeSlot,
-        OR: [{ isBooked: true }, { isBlocked: true }],
-      },
-    });
-    if (existingSlot) {
-      return jsonError('This slot was just booked by someone else. Please choose another.', 409);
-    }
-
     const pkg = PACKAGES[packageId as keyof typeof PACKAGES];
     if (!pkg) {
       return jsonError('Invalid package.', 400);
@@ -70,46 +65,56 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    const booking = await prisma.booking.create({
-      data: {
-        userId,
-        userName: session.user?.name || 'Customer',
-        userEmail: session.user?.email || '',
-        userPhone: user?.phone ?? undefined,
-        package: packageId as PackageType,
-        packageName: pkg.name,
-        date: new Date(date),
-        timeSlot,
-        amount: quote.amount,
-        originalAmount: quote.originalAmount,
-        discountApplied: quote.discountApplied,
-        couponCode: couponCode?.trim() || undefined,
-        status: 'confirmed',
-        paymentId: mockPaymentId,
-        paymentOrderId: `mock_order_${mockPaymentId.replace(/^mock_/, '')}`,
-        paymentStatus: 'paid',
-      },
-    });
+    let bookingIdOut: string | undefined;
 
-    await prisma.slot.upsert({
-      where: { date_time: { date, time: timeSlot } },
-      create: {
-        date,
-        time: timeSlot,
-        isBooked: true,
-        bookingId: booking.id,
-      },
-      update: {
-        isBooked: true,
-        bookingId: booking.id,
-      },
-    });
+    for (let attempt = 0; attempt < BOOKING_CONFIRM_MAX_ATTEMPTS; attempt++) {
+      try {
+        const booking = await prisma.$transaction(
+          (tx) =>
+            runConfirmBookingInTransaction(tx, {
+              userId,
+              userName: session.user?.name || 'Customer',
+              userEmail: session.user?.email || '',
+              userPhone: user?.phone ?? undefined,
+              packageId: packageId as PackageType,
+              packageName: pkg.name,
+              date,
+              timeSlot,
+              quote: {
+                amount: quote.amount,
+                originalAmount: quote.originalAmount,
+                discountApplied: quote.discountApplied,
+                didApplyCoupon: quote.didApplyCoupon,
+              },
+              couponCode: couponCode?.trim() || undefined,
+              mockPaymentId,
+            }),
+          { maxWait: 5000, timeout: 10000 }
+        );
+        bookingIdOut = booking.id;
+        break;
+      } catch (error) {
+        if (error instanceof SlotUnavailableError) {
+          return jsonError('This slot was just booked by someone else. Please choose another.', 409);
+        }
+        const retry =
+          isRetryableBookingConfirmError(error) && attempt < BOOKING_CONFIRM_MAX_ATTEMPTS - 1;
+        if (retry) {
+          await new Promise((r) => setTimeout(r, 50 * (attempt + 1)));
+          continue;
+        }
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034') {
+          return jsonError('Could not confirm this slot right now. Please try again.', 409);
+        }
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+          return jsonError('This slot was just booked by someone else. Please choose another.', 409);
+        }
+        throw error;
+      }
+    }
 
-    if (couponCode?.trim()) {
-      await prisma.coupon.updateMany({
-        where: { code: String(couponCode).toUpperCase() },
-        data: { usedCount: { increment: 1 } },
-      });
+    if (!bookingIdOut) {
+      return jsonError('Could not confirm this slot right now. Please try again.', 409);
     }
 
     try {
@@ -122,7 +127,7 @@ export async function POST(req: NextRequest) {
           date: format(new Date(date), 'EEEE, MMMM d, yyyy'),
           timeSlot: formatTimeSlot(timeSlot),
           amount: quote.amount,
-          bookingId: booking.id,
+          bookingId: bookingIdOut,
         });
       }
     } catch (emailError) {
@@ -130,7 +135,7 @@ export async function POST(req: NextRequest) {
     }
 
     return jsonOk({
-      bookingId: booking.id,
+      bookingId: bookingIdOut,
       message: 'Booking confirmed!',
     });
   } catch (error) {

@@ -54,11 +54,99 @@
     @apply font-sans text-white;
   }
 
+  /* Default heading rhythm — components override with .heading-* utilities */
+  h1 {
+    @apply text-3xl font-black tracking-tight sm:text-4xl;
+    line-height: 1.12;
+  }
+
+  h2 {
+    @apply text-3xl font-black tracking-tight sm:text-4xl;
+    line-height: 1.12;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+    line-height: 1.35;
+  }
+
   button,
   input,
   textarea,
   select {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  /* —— Typography system (Abel / font-sans) —— */
+
+  /** H1 — inner pages */
+  .heading-page {
+    @apply font-sans text-3xl font-black tracking-tight text-white sm:text-4xl;
+    line-height: 1.12;
+  }
+
+  /** H1 — home hero */
+  .heading-hero {
+    @apply font-sans font-black tracking-tight text-white;
+    font-size: clamp(2.25rem, 6.5vw, 3.75rem);
+    line-height: 1.06;
+  }
+
+  /** H2 — major section titles */
+  .heading-section {
+    @apply font-sans text-3xl font-black tracking-tight text-white sm:text-4xl;
+    line-height: 1.12;
+  }
+
+  /** H3 — subsections (steps, feature titles, etc.) */
+  .heading-sub {
+    @apply font-sans text-lg font-semibold text-white;
+    line-height: 1.35;
+  }
+
+  /** Dense grids (feature cards) */
+  .heading-sub-compact {
+    @apply font-sans text-base font-semibold text-white;
+    line-height: 1.35;
+  }
+
+  /** H3 — dense UI (booking sidebar, admin cards) */
+  .heading-panel {
+    @apply font-sans text-base font-semibold text-white sm:text-lg;
+    line-height: 1.35;
+  }
+
+  /** Package / product names on cards */
+  .heading-product {
+    @apply font-sans text-xl font-black tracking-tight text-white sm:text-2xl;
+    line-height: 1.2;
+  }
+
+  /** Modal / dialog titles */
+  .heading-dialog {
+    @apply font-sans text-xl font-black tracking-tight text-white;
+  }
+
+  /** Strong status lines inside modals (e.g. success) */
+  .heading-emphasis {
+    @apply font-sans text-2xl font-black tracking-tight text-white;
+  }
+
+  /** List section labels (dashboard, tables) */
+  .heading-list-label {
+    @apply font-sans text-sm font-semibold uppercase tracking-widest text-zinc-400;
+  }
+
+  /** Eyebrow above section titles */
+  .section-eyebrow {
+    @apply glass-gold mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400;
+  }
+
+  /** Default marketing body under a section title */
+  .text-section-lead {
+    @apply text-base leading-relaxed text-zinc-400 sm:text-lg;
   }
 }
 
@@ -263,6 +351,37 @@
   animation: shimmer 2s infinite;
 }
 
+/* react-day-picker — Add to cart / booking modal (dark UI)
+   Tailwind preflight + flex on <tr> classNames broke table layout; keep rdp-* row/head_row classes. */
+.rdp-booking-calendar .rdp {
+  --rdp-cell-size: 2.25rem;
+  --rdp-caption-font-size: 0.875rem;
+  --rdp-accent-color: #fafafa;
+  --rdp-background-color: rgba(255, 255, 255, 0.1);
+  --rdp-selected-color: #0a0a0a;
+  margin: 0;
+  color: inherit;
+}
+
+.rdp-booking-calendar .rdp-day {
+  border-radius: 0.5rem;
+}
+
+.rdp-booking-calendar .rdp-day_selected,
+.rdp-booking-calendar .rdp-day_selected:hover {
+  border-radius: 0.5rem;
+}
+
+.rdp-booking-calendar .rdp-table,
+.rdp-booking-calendar .rdp-head_cell,
+.rdp-booking-calendar .rdp-cell {
+  border: 0;
+}
+
+.rdp-booking-calendar .rdp-head_cell {
+  font-weight: 600;
+}
+
 /* Slot button */
 .slot-btn {
   @apply relative flex flex-col items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer text-sm font-medium;
@@ -429,10 +548,4 @@
 
 .page-enter {
   animation: page-enter 0.4s ease-out;
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: clamp(2.5rem, 10vw, 5rem);
-  }
 }

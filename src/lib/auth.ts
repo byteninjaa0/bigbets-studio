@@ -5,6 +5,12 @@ import { consumeEmailLoginToken } from './login-token';
 
 const isDev = process.env.NODE_ENV === 'development';
 
+/** How long JWT keeps cached user id / isAdmin before re-querying Prisma (default 5 minutes). */
+const PROFILE_REFRESH_MS = (() => {
+  const n = Number(process.env.JWT_PROFILE_REFRESH_MS);
+  return Number.isFinite(n) && n > 0 ? n : 5 * 60 * 1000;
+})();
+
 function adminEmailList(): string[] {
   return (process.env.ADMIN_EMAILS || '')
     .split(',')
@@ -63,23 +69,71 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user, trigger }) {
-      if (user?.email) {
-        token.email = user.email.toLowerCase().trim();
+      if (user) {
+        const u = user as { id?: string; email?: string | null; isAdmin?: boolean };
+        if (u.email) {
+          token.email = u.email.toLowerCase().trim();
+        }
+        if (u.id) {
+          token.id = u.id;
+        }
+        token.isAdmin = Boolean(u.isAdmin);
+        token.profileRefreshedAt = Date.now();
+
+        if (isDev) {
+          console.log('[next-auth][jwt]', { hasUser: true, trigger, sub: token.sub, id: token.id, source: 'sign-in' });
+        }
+        return token;
       }
 
       const email = typeof token.email === 'string' ? token.email : undefined;
-      if (email) {
-        const dbUser = await prisma.user.findUnique({ where: { email } });
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.isAdmin = resolveIsAdmin(email, dbUser.isAdmin);
-        } else {
-          token.isAdmin = resolveIsAdmin(email, false);
+      if (!email) {
+        if (isDev) {
+          console.log('[next-auth][jwt]', { hasUser: false, trigger, sub: token.sub, skip: 'no-email' });
         }
+        return token;
       }
 
+      const refreshedAt = token.profileRefreshedAt;
+      const ageMs = typeof refreshedAt === 'number' ? Date.now() - refreshedAt : Number.POSITIVE_INFINITY;
+      const cacheExpired = ageMs > PROFILE_REFRESH_MS;
+      const shouldLoadFromDb = trigger === 'update' || cacheExpired;
+
+      if (!shouldLoadFromDb) {
+        if (isDev) {
+          console.log('[next-auth][jwt]', {
+            hasUser: false,
+            trigger,
+            sub: token.sub,
+            id: token.id,
+            source: 'cache',
+            ageSec: Math.round(ageMs / 1000),
+          });
+        }
+        return token;
+      }
+
+      const dbUser = await prisma.user.findUnique({
+        where: { email },
+        select: { id: true, isAdmin: true },
+      });
+      if (dbUser) {
+        token.id = dbUser.id;
+        token.isAdmin = resolveIsAdmin(email, dbUser.isAdmin);
+      } else {
+        delete token.id;
+        token.isAdmin = resolveIsAdmin(email, false);
+      }
+      token.profileRefreshedAt = Date.now();
+
       if (isDev) {
-        console.log('[next-auth][jwt]', { hasUser: !!user, trigger, sub: token.sub, id: token.id });
+        console.log('[next-auth][jwt]', {
+          hasUser: false,
+          trigger,
+          sub: token.sub,
+          id: token.id,
+          source: 'db',
+        });
       }
 
       return token;
