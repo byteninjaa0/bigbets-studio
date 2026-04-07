@@ -20,9 +20,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Image
             src={siteConfig.logoPath}
             alt=""
-            width={240}
-            height={96}
-            className="h-10 w-auto max-h-10 max-w-[13rem] object-contain object-left transition-opacity group-hover:opacity-90 sm:h-12 sm:max-h-12 sm:max-w-[16rem]"
+            width={280}
+            height={112}
+            className="h-11 w-auto max-h-11 max-w-[12.5rem] object-contain object-left transition-opacity group-hover:opacity-90 sm:h-12 sm:max-h-12 sm:max-w-[17rem] md:h-14 md:max-h-14 md:max-w-[19rem]"
             priority
           />
         </Link>

@@ -106,12 +106,12 @@ export default function Navbar() {
               'focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950'
             )}
           >
-            <span className="flex h-9 max-h-9 w-auto max-w-[min(11rem,calc(100vw-8.5rem))] items-center sm:h-10 sm:max-h-10 md:h-11 md:max-h-11 md:max-w-[15rem] lg:max-w-[16rem]">
+            <span className="flex h-11 max-h-11 w-auto max-w-[min(12.5rem,calc(100vw-8.5rem))] items-center sm:h-12 sm:max-h-12 md:h-14 md:max-h-14 md:max-w-[17rem] lg:max-w-[19rem]">
               <Image
                 src={siteConfig.logoPath}
                 alt=""
-                width={240}
-                height={96}
+                width={280}
+                height={112}
                 className="block h-full w-auto max-h-full object-contain object-left"
                 priority
               />
