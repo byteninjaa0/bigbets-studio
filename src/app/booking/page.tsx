@@ -49,6 +49,7 @@ export default function BookingPage() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [bookingId, setBookingId] = useState('');
   const [successMeta, setSuccessMeta] = useState<{ moreInCart: number } | null>(null);
+  const [expandedPackageFeatures, setExpandedPackageFeatures] = useState<string | null>(null);
 
   const cartRef = useRef<HTMLDivElement>(null);
   const checkoutStepRef = useRef<HTMLDivElement>(null);
@@ -302,20 +303,11 @@ export default function BookingPage() {
               {(['SET_A', 'SET_B', 'SET_C'] as const).map((pkgId) => {
                 const pkg = PACKAGES[pkgId];
                 const isPopular = pkgId === 'SET_B';
+                const showAllFeatures = expandedPackageFeatures === pkgId;
+                const visibleFeatures = showAllFeatures ? pkg.features : pkg.features.slice(0, 5);
+                const hiddenCount = pkg.features.length > 5 ? pkg.features.length - 5 : 0;
                 return (
-                  <div
-                    key={pkgId}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setAddModalPackageId(pkgId)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        setAddModalPackageId(pkgId);
-                      }
-                    }}
-                    className={`card-package cursor-pointer p-6 ${isPopular ? 'popular' : ''}`}
-                  >
+                  <div key={pkgId} className={`card-package flex flex-col p-6 ${isPopular ? 'popular' : ''}`}>
                     {pkg.badge && (
                       <span
                         className={`mb-3 inline-block rounded-full px-3 py-1 text-xs font-bold ${isPopular ? 'badge-popular' : 'badge-premium'}`}
@@ -327,17 +319,34 @@ export default function BookingPage() {
                     <p className="mb-4 text-sm text-zinc-500">{pkg.tagline}</p>
                     <div className="mb-4 text-3xl font-black text-gradient-gold">₹{pkg.price.toLocaleString('en-IN')}</div>
                     <ul className="mb-6 space-y-2">
-                      {pkg.features.slice(0, 5).map((f) => (
+                      {visibleFeatures.map((f) => (
                         <li key={f} className="flex items-center gap-2 text-xs text-white/60">
                           <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0 text-zinc-400/60" />
                           {f}
                         </li>
                       ))}
-                      {pkg.features.length > 5 && <li className="text-xs text-zinc-400/60">+{pkg.features.length - 5} more...</li>}
+                      {hiddenCount > 0 && (
+                        <li className="pt-0.5">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setExpandedPackageFeatures((cur) => (cur === pkgId ? null : pkgId))
+                            }
+                            className="text-xs font-medium text-zinc-400 underline decoration-zinc-600 underline-offset-2 transition-colors hover:text-zinc-200"
+                            aria-expanded={showAllFeatures}
+                          >
+                            {showAllFeatures ? 'Show fewer features' : `Show ${hiddenCount} more features`}
+                          </button>
+                        </li>
+                      )}
                     </ul>
-                    <div className={`w-full rounded-xl py-3 text-center text-sm font-semibold ${isPopular ? 'btn-primary' : 'border border-zinc-500/30 text-zinc-400'}`}>
+                    <button
+                      type="button"
+                      onClick={() => setAddModalPackageId(pkgId)}
+                      className={`mt-auto w-full rounded-xl py-3 text-center text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 ${isPopular ? 'btn-primary' : 'border border-zinc-500/30 text-zinc-400 hover:border-zinc-500/50 hover:bg-zinc-500/10'}`}
+                    >
                       Select date &amp; time →
-                    </div>
+                    </button>
                   </div>
                 );
               })}

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Clock, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { DayPicker } from 'react-day-picker';
@@ -28,7 +29,9 @@ type Props = {
 };
 
 export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }: Props) {
+  const { status } = useSession();
   const addItem = useCart((s) => s.addItem);
+  const addInFlight = useRef(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedSlot, setSelectedSlot] = useState('');
   const [slots, setSlots] = useState<SlotInfo[]>([]);
@@ -50,6 +53,13 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
       reset();
     }
   }, [open, reset]);
+
+  useEffect(() => {
+    if (open && status === 'unauthenticated') {
+      toast.error('Sign in to add sessions to your cart.');
+      onOpenChange(false);
+    }
+  }, [open, status, onOpenChange]);
 
   const fetchSlots = useCallback(async (date: Date) => {
     setSlotsLoading(true);
@@ -82,6 +92,11 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
   };
 
   const handleAdd = () => {
+    if (addInFlight.current || submitting) return;
+    if (status !== 'authenticated') {
+      toast.error('Sign in to add sessions to your cart.');
+      return;
+    }
     if (!packageId || !pkg || !selectedDate || !selectedSlot) {
       toast.error('Choose a date and time slot.');
       return;
@@ -91,36 +106,41 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
     const formattedTime = formatTimeSlot(selectedSlot);
     const price = getPackagePrice(packageId, selectedDate);
 
+    addInFlight.current = true;
     setSubmitting(true);
-    const result = addItem({
-      packageId,
-      packageName: pkg.name,
-      price,
-      date: dateStr,
-      timeSlot: selectedSlot,
-      formattedDate,
-      formattedTime,
-    });
-    setSubmitting(false);
+    try {
+      const result = addItem({
+        packageId,
+        packageName: pkg.name,
+        price,
+        date: dateStr,
+        timeSlot: selectedSlot,
+        formattedDate,
+        formattedTime,
+      });
 
-    if (!result.ok) {
-      toast.error('This date & time is already in your cart for that package.');
-      return;
+      if (!result.ok) {
+        toast.error('This date & time is already in your cart for that package.');
+        return;
+      }
+
+      const line: CartLine = {
+        id: result.id,
+        packageId,
+        packageName: pkg.name,
+        price,
+        date: dateStr,
+        timeSlot: selectedSlot,
+        formattedDate,
+        formattedTime,
+      };
+      toast.success(`${pkg.name} added to cart`);
+      onAdded?.(line);
+      onOpenChange(false);
+    } finally {
+      addInFlight.current = false;
+      setSubmitting(false);
     }
-
-    const line: CartLine = {
-      id: result.id,
-      packageId,
-      packageName: pkg.name,
-      price,
-      date: dateStr,
-      timeSlot: selectedSlot,
-      formattedDate,
-      formattedTime,
-    };
-    toast.success(`${pkg.name} added to cart`);
-    onAdded?.(line);
-    onOpenChange(false);
   };
 
   if (!pkg) return null;

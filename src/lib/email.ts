@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { siteConfig } from '@/config/site';
+import { getPublicSiteUrl } from '@/lib/public-site-url';
 
 function escapeHtml(text: string): string {
   return text
@@ -48,6 +49,13 @@ export async function sendBookingConfirmation(booking: {
   amount: number;
   bookingId: string;
 }) {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('[email] Skipping booking confirmation email: EMAIL_USER or EMAIL_PASS not configured');
+    return;
+  }
+
+  const dashboardUrl = `${getPublicSiteUrl()}/dashboard`;
+
   const html = `
   <!DOCTYPE html>
   <html>
@@ -83,7 +91,7 @@ export async function sendBookingConfirmation(booking: {
         <div class="confirmed-badge">BOOKING CONFIRMED</div>
       </div>
       <div class="body">
-        <div class="title">You're All Set, ${booking.userName}!</div>
+        <div class="title">You're all set, ${escapeHtml(booking.userName)}!</div>
         <div class="subtitle">Your podcast session has been confirmed. See you at the studio!</div>
         
         <div class="booking-card">
@@ -115,7 +123,7 @@ export async function sendBookingConfirmation(booking: {
         </div>
         
         <div class="cta">
-          <a href="${process.env.NEXTAUTH_URL}/dashboard" class="cta-btn">View My Booking</a>
+          <a href="${dashboardUrl}" class="cta-btn">View My Booking</a>
         </div>
       </div>
       <div class="footer">
@@ -130,12 +138,36 @@ export async function sendBookingConfirmation(booking: {
   </html>
   `;
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM || `"${siteConfig.name}" <${siteConfig.email}>`,
-    to: booking.userEmail,
-    subject: `Booking confirmed – ${booking.date} at ${booking.timeSlot}`,
-    html,
-  });
+  const plainText = [
+    `${siteConfig.name} — booking confirmed`,
+    '',
+    `Hi ${booking.userName},`,
+    '',
+    `Booking reference: #${booking.bookingId.slice(-8).toUpperCase()}`,
+    `Package: ${booking.packageName}`,
+    `Date: ${booking.date}`,
+    `Time: ${booking.timeSlot}`,
+    `Amount paid: ₹${booking.amount.toLocaleString('en-IN')}`,
+    '',
+    `View your booking: ${dashboardUrl}`,
+    '',
+    siteConfig.address.full,
+    siteConfig.email,
+  ].join('\n');
+
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || `"${siteConfig.name}" <${siteConfig.email}>`,
+      to: booking.userEmail,
+      subject: `Booking confirmed — ${booking.date} · ${booking.timeSlot}`,
+      text: plainText,
+      html,
+    });
+    console.log('[email] Booking confirmation sent', { to: booking.userEmail, bookingId: booking.bookingId });
+  } catch (err) {
+    console.error('[email] Booking confirmation send failed', { to: booking.userEmail, err });
+    throw err;
+  }
 }
 
 const cancellationEmailStyles = `

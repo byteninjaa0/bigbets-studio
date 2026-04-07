@@ -178,8 +178,10 @@ export const authOptions: NextAuthOptions = {
 
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60,
-    updateAge: 24 * 60 * 60,
+    /** Session lifetime (24h). Aligns JWT expiry with cookie maxAge. */
+    maxAge: 24 * 60 * 60,
+    /** Refresh sliding window: update session at most this often when active. */
+    updateAge: 60 * 60,
   },
 
   secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,

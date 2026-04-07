@@ -13,6 +13,10 @@ import { mainNavLinks } from '@/config/navigation';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
+function clearCartStore() {
+  useCart.getState().clearCart();
+}
+
 function navItemIsActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/';
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -20,7 +24,7 @@ function navItemIsActive(pathname: string, href: string): boolean {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const cartCount = useCart((s) => s.items.length);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -133,7 +137,7 @@ export default function Navbar() {
 
           {/* Actions — vertically centered within stretched nav row */}
           <div className="relative z-[1] flex shrink-0 items-center justify-end gap-2 sm:gap-3">
-            {cartCount > 0 && (
+            {sessionStatus === 'authenticated' && cartCount > 0 && (
               <Link
                 href="/booking"
                 className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-zinc-950 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 sm:h-11 sm:w-11"
@@ -214,6 +218,7 @@ export default function Navbar() {
                           role="menuitem"
                           onClick={() => {
                             setUserMenuOpen(false);
+                            clearCartStore();
                             signOut({ callbackUrl: '/' });
                           }}
                           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"
@@ -310,7 +315,7 @@ export default function Navbar() {
                 </ul>
 
                 <div className="mt-auto space-y-3 border-t border-white/10 pt-6">
-                  {cartCount > 0 && (
+                  {sessionStatus === 'authenticated' && cartCount > 0 && (
                     <Link
                       href="/booking"
                       onClick={closeMobile}
@@ -364,6 +369,7 @@ export default function Navbar() {
                         type="button"
                         onClick={() => {
                           closeMobile();
+                          clearCartStore();
                           signOut({ callbackUrl: '/' });
                         }}
                         className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-zinc-800 text-sm font-medium text-zinc-400 hover:bg-zinc-900 hover:text-white"
