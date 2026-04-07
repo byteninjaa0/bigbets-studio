@@ -5,8 +5,8 @@
 
 export const siteConfig = {
   name: 'BigBets Studio',
-  /** Brand mark — `public/photos/logo.jpeg` */
-  logoPath: '/photos/log.jpeg',
+  /** Brand mark — `public/photos/logo.png` (path must match filename exactly; Linux/Vercel is case-sensitive) */
+  logoPath: '/photos/logo.png',
   shortDescription:
     'Podcast and video recording studio in Crossing Republik, Ghaziabad — book online, record with pro audio and multi-cam switching.',
 

@@ -93,23 +93,29 @@ export default function Navbar() {
     >
       <PageContainer>
         <nav
-          className="flex h-16 items-center justify-between gap-3 sm:h-20 sm:gap-4"
+          className="flex h-16 items-stretch justify-between gap-4 sm:h-20 sm:gap-6"
           aria-label="Primary"
         >
-          {/* Logo */}
+          {/* Logo — full row height for hit area; image centered on cross-axis */}
           <Link
             href="/"
             aria-label={`${siteConfig.name} home`}
-            className="group flex min-w-0 shrink-0 items-center pr-1"
+            className={cn(
+              'group flex min-w-0 shrink-0 cursor-pointer items-center rounded-lg outline-none',
+              'transition-opacity duration-200 hover:opacity-90',
+              'focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950'
+            )}
           >
-            <Image
-              src={siteConfig.logoPath}
-              alt=""
-              width={240}
-              height={96}
-              className="h-10 w-auto max-h-10 max-w-[min(13rem,52vw)] object-contain object-left transition-opacity duration-200 group-hover:opacity-90 sm:h-12 sm:max-h-12 sm:max-w-[16rem] md:max-w-[18rem]"
-              priority
-            />
+            <span className="flex h-9 max-h-9 w-auto max-w-[min(11rem,calc(100vw-8.5rem))] items-center sm:h-10 sm:max-h-10 md:h-11 md:max-h-11 md:max-w-[15rem] lg:max-w-[16rem]">
+              <Image
+                src={siteConfig.logoPath}
+                alt=""
+                width={240}
+                height={96}
+                className="block h-full w-auto max-h-full object-contain object-left"
+                priority
+              />
+            </span>
           </Link>
 
           {/* Desktop: centered nav — avoids flex squeeze hiding links */}
@@ -125,8 +131,8 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Actions — isolate above page content; hamburger stays high-contrast on scroll */}
-          <div className="relative z-[1] flex shrink-0 items-center gap-2 sm:gap-3">
+          {/* Actions — vertically centered within stretched nav row */}
+          <div className="relative z-[1] flex shrink-0 items-center justify-end gap-2 sm:gap-3">
             {cartCount > 0 && (
               <Link
                 href="/booking"
