@@ -1,0 +1,25 @@
+---
+description: Enforce project design system and UI quality rules
+alwaysApply: true
+---
+
+# Design system rules
+
+Apply these rules to all generated code unless the user explicitly requests an exception.
+
+- Colors: never hardcode hex in component files; use tokens from `src/styles/tokens.css`. Use semantic tokens (`--color-danger`, `--color-success`, `--color-warning`). Ensure light/dark via variables.
+- Typography: use only token scale (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`, `--text-2xl`, `--text-4xl`), weights 400/500 (700 only for hero headline), body line-height 1.65, heading line-height 1.15, body letter spacing 0, large heading letter spacing -0.02em.
+- Spacing: only 4/8 scale values (4, 8, 12, 16, 24, 32, 48, 64) via `--space-1`..`--space-16`; never arbitrary spacing values.
+- Interactive/focus: every interactive element must have visible focus ring (`outline: 2px solid var(--color-primary); outline-offset: 2px`).
+- Data states: every data-fetching UI must include loading, error (with actionable retry), and empty states.
+- Async actions: async buttons must show local loading + disabled state; include hover, active scale `0.97`, and focus states.
+- Images: always set explicit width/height or aspect ratio to prevent layout shift.
+- Borders: default `0.5px solid var(--color-border)`; emphasis `1px solid var(--color-border-strong)`; never thicker than 1px for UI.
+- Animations: hover transitions `150ms cubic-bezier(0.4, 0, 0.2, 1)`; entrances `250ms cubic-bezier(0.34, 1.56, 0.64, 1)`; wrap non-essential motion in `@media (prefers-reduced-motion: reduce)`.
+- Icons: use Lucide React only; always pass explicit `size` prop (e.g., `size={16}`).
+- Copy: sentence case for UI labels/buttons/nav; avoid title case; error copy must be specific/actionable (never “Something went wrong”).
+- Code quality: no inline styles except truly dynamic values; colocate related components and expose index barrel where appropriate.
+
+# Explicit exception
+
+- `src/lib/email.ts` and `src/lib/email-login.ts` may use inline hex for email HTML compatibility.

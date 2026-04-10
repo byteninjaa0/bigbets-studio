@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <Link
           href="/"
           aria-label={`${siteConfig.name} home`}
-          className="group inline-flex items-center gap-2.5"
+          className="group inline-flex items-center gap-2"
         >
           <Image
             src={siteConfig.logoPath}

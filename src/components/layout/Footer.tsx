@@ -7,14 +7,14 @@ export default function Footer() {
   const { social } = siteConfig;
 
   return (
-    <footer className="border-t border-zinc-800 bg-[#0a0a0a]">
+    <footer className="border-t border-zinc-800 bg-surface">
       <PageContainer className="py-12 md:py-16">
         <div className="mb-12 grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-8 lg:gap-12">
           <div className="md:col-span-2">
             <Link
               href="/"
               aria-label={`${siteConfig.name} home`}
-              className="group mb-5 inline-flex items-center gap-2.5 transition-opacity hover:opacity-90"
+              className="group mb-5 inline-flex items-center gap-2 transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             >
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-400 to-zinc-600">
                 <Mic2 className="h-5 w-5 text-black" />
@@ -36,7 +36,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all duration-200 hover:border-zinc-500/40 hover:text-zinc-200"
+                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all duration-200 hover:border-zinc-500/40 hover:text-zinc-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   aria-label="Social link"
                 >
                   <Icon className="h-4 w-4" />
@@ -59,7 +59,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-zinc-400 transition-colors duration-200 hover:text-zinc-200"
+                    className="text-sm text-zinc-400 transition-colors duration-200 hover:text-zinc-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   >
                     {link.label}
                   </Link>
@@ -76,7 +76,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`tel:+${siteConfig.phoneE164}`}
-                  className="inline-flex items-center gap-2 text-zinc-400 transition-colors duration-200 hover:text-zinc-200"
+                  className="inline-flex items-center gap-2 text-zinc-400 transition-colors duration-200 hover:text-zinc-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                 >
                   <Phone className="h-3.5 w-3.5 shrink-0" />
                   {siteConfig.phoneDisplay}
@@ -85,7 +85,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="inline-flex items-center gap-2 break-all text-zinc-400 transition-colors duration-200 hover:text-zinc-200"
+                  className="inline-flex items-center gap-2 break-all text-zinc-400 transition-colors duration-200 hover:text-zinc-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                 >
                   <Mail className="h-3.5 w-3.5 shrink-0" />
                   {siteConfig.email}
@@ -104,7 +104,7 @@ export default function Footer() {
               <a
                 key={item}
                 href="#"
-                className="text-xs text-zinc-500 transition-colors duration-200 hover:text-zinc-300"
+                className="text-xs text-zinc-500 transition-colors duration-200 hover:text-zinc-300 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 {item}
               </a>

@@ -34,7 +34,7 @@ export default function WhatsAppButton() {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="whatsapp-float"
+        className="whatsapp-float focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         whileHover={{ scale: 1.1 }}

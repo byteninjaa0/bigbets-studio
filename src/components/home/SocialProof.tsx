@@ -16,7 +16,7 @@ const pillars = [
 
 export default function SocialProof() {
   return (
-    <section className="relative overflow-hidden border-y border-zinc-800 bg-[#0a0a0a] py-10 md:py-14">
+    <section className="relative overflow-hidden border-y border-zinc-800 bg-surface py-10 md:py-14">
       <PageContainer>
         <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 md:mb-8">
           Why creators book with us
@@ -41,7 +41,7 @@ export default function SocialProof() {
                 <p.icon className="h-4 w-4 text-zinc-400" />
               </div>
               <p className="font-sans text-xs font-bold leading-tight text-white sm:text-sm">{p.label}</p>
-              <p className="mt-1 break-words text-[11px] leading-snug text-zinc-500 sm:text-xs">{p.sub}</p>
+              <p className="mt-1 break-words text-xs leading-snug text-zinc-500 sm:text-xs">{p.sub}</p>
             </motion.div>
           ))}
         </motion.div>

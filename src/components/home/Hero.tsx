@@ -16,8 +16,8 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden pt-16 sm:pt-20 hero-bg grid-pattern">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-zinc-500/5 blur-[120px] -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-zinc-600/4 blur-[100px]" />
+        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-2xl bg-zinc-500/5 blur-[120px] -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-2xl bg-zinc-600/4 blur-[100px]" />
         <motion.div
           className="absolute right-[5%] top-[15%] w-80 h-80 opacity-[0.07]"
           animate={{ rotate: [0, 5, 0, -5, 0], y: [0, -20, 0] }}
@@ -46,10 +46,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6 inline-flex max-w-full flex-wrap items-center gap-2 rounded-full glass-gold px-3 py-2 sm:mb-8 sm:gap-2.5 sm:px-4"
+            className="mb-6 inline-flex max-w-full flex-wrap items-center gap-2 rounded-full glass-gold px-3 py-2 sm:mb-8 sm:gap-3 sm:px-4"
           >
             <span className="relative flex h-2 w-2">
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-zinc-400" />
+              <span className="relative inline-flex rounded h-2 w-2 bg-zinc-400" />
             </span>
             <span className="text-zinc-300/90 text-sm font-medium">Crossing Republik · Ghaziabad</span>
             <span className="text-white/20">•</span>
@@ -90,7 +90,7 @@ export default function Hero() {
             {[`${siteConfig.equipment[0]}`, '4K pipeline', 'Treated room', 'Pro mics', 'Edit packages'].map((feat) => (
               <span
                 key={feat}
-                className="flex items-center gap-1.5 text-sm text-white/60 glass border border-white/6 rounded-full px-3 py-1.5"
+                className="flex items-center gap-2 text-sm text-white/60 glass border border-white/6 rounded-full px-3 py-2"
               >
                 <Zap className="w-3 h-3 text-zinc-400 flex-shrink-0" />
                 {feat}
@@ -104,15 +104,15 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mb-12 flex w-full max-w-md flex-col gap-4 sm:max-w-none sm:flex-row sm:items-center"
           >
-            <a href="#packages" className="btn-primary group w-full justify-center sm:w-auto">
+            <a href="#packages" className="btn-primary group w-full justify-center focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:w-auto">
               Book Your Session
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
             </a>
             <a
               href="#how-it-works"
-              className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-200 group"
+              className="flex items-center gap-3 text-white/60 hover:text-white transition-colors duration-200 group focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             >
-              <div className="w-11 h-11 rounded-full border border-white/10 flex items-center justify-center group-hover:border-zinc-500/30 group-hover:bg-zinc-500/5 transition-all duration-200">
+              <div className="w-11 h-11 rounded-lg border border-white/10 flex items-center justify-center group-hover:border-zinc-500/30 group-hover:bg-zinc-500/5 transition-all duration-200">
                 <Play className="w-4 h-4 fill-current ml-0.5" />
               </div>
               <span className="text-sm font-medium">See how it works</span>
@@ -131,12 +131,12 @@ export default function Hero() {
             </div>
             <p className="text-white/55 text-sm mb-3">
               Prefer to confirm a slot or ask about gear before you pay? Call or WhatsApp — we&apos;re on{' '}
-              <a href={`tel:+${siteConfig.phoneE164}`} className="text-white font-medium hover:underline">
+              <a href={`tel:+${siteConfig.phoneE164}`} className="text-white font-medium hover:underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2">
                 {siteConfig.phoneDisplay}
               </a>
               .
             </p>
-            <Link href="/#contact" className="text-xs font-medium text-zinc-400 hover:text-white transition-colors">
+            <Link href="/#contact" className="text-xs font-medium text-zinc-400 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2">
               Full address & map →
             </Link>
           </motion.div>
@@ -149,11 +149,11 @@ export default function Hero() {
                   initial={{ opacity: 0, x: 24 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 + i * 0.12 }}
-                  className="glass w-full rounded-2xl border border-white/8 p-4 transition-all duration-200 hover:scale-[1.02] hover:border-zinc-500/25"
+                  className="glass w-full rounded-xl border border-white/8 p-4 transition-all duration-200 hover:scale-[1.02] hover:border-zinc-500/25"
                   style={{ animation: `float ${6 + i}s ease-in-out infinite`, animationDelay: `${i * 0.5}s` }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-500/20 bg-zinc-500/10">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-zinc-500/20 bg-zinc-500/10">
                       <stat.icon className="h-4 w-4 text-zinc-400" />
                     </div>
                     <div className="min-w-0">
@@ -173,8 +173,8 @@ export default function Hero() {
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <div className="w-6 h-10 rounded-full border-2 border-white/10 flex items-start justify-center p-2">
-          <div className="w-1 h-2 bg-white/20 rounded-full" />
+        <div className="w-6 h-10 rounded-xl border-2 border-white/10 flex items-start justify-center p-2">
+          <div className="w-1 h-2 bg-white/20 rounded" />
         </div>
       </motion.div>
     </section>

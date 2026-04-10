@@ -209,7 +209,7 @@ export default function BookingPage() {
             ].map(({ n, label, icon: Icon }, i) => (
               <div key={label} className="flex items-center gap-2">
                 <div
-                  className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-300 ${
+                  className={`flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-300 ${
                     progressStep === n
                       ? 'border-zinc-500/30 bg-zinc-500/15 text-zinc-400'
                       : progressStep > n
@@ -261,11 +261,11 @@ export default function BookingPage() {
                   <div className="min-w-0 flex-1 space-y-2">
                     <p className="font-semibold text-white">{line.packageName}</p>
                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/50">
-                      <span className="flex items-center gap-1.5">
+                      <span className="flex items-center gap-2">
                         <Calendar className="h-3.5 w-3.5" />
                         {line.formattedDate}
                       </span>
-                      <span className="flex items-center gap-1.5">
+                      <span className="flex items-center gap-2">
                         <Clock className="h-3.5 w-3.5" />
                         {line.formattedTime}
                       </span>
@@ -278,7 +278,7 @@ export default function BookingPage() {
                     <button
                       type="button"
                       onClick={() => removeItem(line.id)}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-400 transition-colors hover:border-red-900/50 hover:bg-red-950/20 hover:text-red-300"
+                      className="inline-flex items-center gap-2 rounded-xl border border-zinc-700 px-3 py-2 text-xs font-medium text-zinc-400 transition-colors hover:border-red-900/50 hover:bg-red-950/20 hover:text-red-300"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                       Remove
@@ -343,7 +343,7 @@ export default function BookingPage() {
                     <button
                       type="button"
                       onClick={() => setAddModalPackageId(pkgId)}
-                      className={`mt-auto w-full rounded-xl py-3 text-center text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:opacity-50 ${isPopular ? 'btn-primary' : 'border border-zinc-500/30 text-zinc-400 hover:border-zinc-500/50 hover:bg-zinc-500/10'}`}
+                      className={`mt-auto w-full rounded-xl py-3 text-center text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:opacity-50 ${isPopular ? 'btn-primary' : 'border border-zinc-500/30 text-zinc-400 hover:border-zinc-500/50 hover:bg-zinc-500/10'}`}
                     >
                       Select date &amp; time →
                     </button>

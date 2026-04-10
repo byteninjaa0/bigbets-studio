@@ -15,6 +15,7 @@ import {
   RefreshCw,
   Lock,
   Shield,
+  Package,
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react';
@@ -69,7 +70,7 @@ function BookingsPaginationBar(props: { page: number; pages: number; onGo: (p: n
   const iconBtn = `${btn} inline-flex items-center justify-center px-2 sm:px-2.5`;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-end sm:gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-end sm:gap-2">
       <button type="button" disabled={page <= 1} onClick={() => onGo(1)} className={iconBtn} aria-label="First page" title="First page">
         <ChevronsLeft className="h-4 w-4" />
       </button>
@@ -92,7 +93,7 @@ function BookingsPaginationBar(props: { page: number; pages: number; onGo: (p: n
       >
         <ChevronsRight className="h-4 w-4" />
       </button>
-      <label className="ml-0 flex items-center gap-1.5 text-xs text-white/35 sm:ml-1">
+      <label className="ml-0 flex items-center gap-2 text-xs text-white/35 sm:ml-1">
         <span className="hidden sm:inline">Go to</span>
         <input
           type="number"
@@ -100,7 +101,7 @@ function BookingsPaginationBar(props: { page: number; pages: number; onGo: (p: n
           max={pages}
           defaultValue={page}
           key={`page-input-${page}`}
-          className="w-12 rounded-md border border-white/10 bg-black/40 px-1 py-1 text-center text-white/80 tabular-nums outline-none focus:border-zinc-500/40"
+          className="w-12 rounded border border-white/10 bg-black/40 px-1 py-1 text-center text-white/80 tabular-nums focus:border-zinc-500/40 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           aria-label="Page number"
           onKeyDown={(e) => {
             if (e.key !== 'Enter') return;
@@ -134,6 +135,7 @@ function AdminPageContent() {
   const [bookingsPages, setBookingsPages] = useState(1);
   const [bookingsLimit, setBookingsLimit] = useState(DEFAULT_BOOKINGS_LIMIT);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [blockDate, setBlockDate] = useState('');
   const [blockTime, setBlockTime] = useState('');
   const [blockReason, setBlockReason] = useState('');
@@ -276,6 +278,16 @@ function AdminPageContent() {
     }
   };
 
+  const handleRefresh = async () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    try {
+      await fetchData();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen animated-bg">
@@ -343,10 +355,11 @@ function AdminPageContent() {
             </div>
             <button
               type="button"
-              onClick={() => void fetchData()}
-              className="rounded-xl border border-white/8 bg-white/[0.03] p-2.5 text-white/40 transition-all hover:border-white/20 hover:text-white"
+              onClick={() => void handleRefresh()}
+              disabled={isRefreshing}
+              className="rounded-lg border border-white/8 bg-white/[0.03] p-2 text-white/40 transition-all hover:border-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
 
@@ -394,36 +407,54 @@ function AdminPageContent() {
               <div className="card-dark p-6">
                 <h3 className="heading-panel mb-5">Package Performance</h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  {stats.packageStats.map((pkg) => {
-                    const total = stats.packageStats.reduce((s, p) => s + p.count, 0);
-                    const pct = total > 0 ? Math.round((pkg.count / total) * 100) : 0;
-                    return (
-                      <div key={pkg._id} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-                        <div className="mb-3 flex items-start justify-between">
-                          <span className="font-bold text-white">{pkg._id}</span>
-                          <span className="text-sm font-semibold text-zinc-400/80">
-                            ₹{pkg.revenue.toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                        <div className="mb-2 h-1.5 overflow-hidden rounded-full bg-white/5">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-zinc-600 to-zinc-400 transition-all duration-500"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <div className="flex justify-between text-xs text-white/40">
-                          <span>{pkg.count} bookings</span>
-                          <span>{pct}%</span>
-                        </div>
+                  {stats.packageStats.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] px-6 py-12 text-center">
+                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.02] text-white/25">
+                        <Package className="h-6 w-6" />
                       </div>
-                    );
-                  })}
+                      <h4 className="mb-1 text-base font-semibold text-white/70">No packages yet</h4>
+                      <p className="text-sm text-white/35">Add your first package to see stats here</p>
+                    </div>
+                  ) : (
+                    stats.packageStats.map((pkg) => {
+                      const total = stats.packageStats.reduce((s, p) => s + p.count, 0);
+                      const pct = total > 0 ? Math.round((pkg.count / total) * 100) : 0;
+                      return (
+                        <div key={pkg._id} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
+                          <div className="mb-3 flex items-start justify-between">
+                            <span className="font-bold text-white">{pkg._id}</span>
+                            <span className="text-sm font-semibold text-zinc-400/80">
+                              ₹{pkg.revenue.toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          <div className="mb-2 h-1.5 overflow-hidden rounded-full bg-white/5">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-zinc-600 to-zinc-400 transition-all duration-500"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <div className="flex justify-between text-xs text-white/40">
+                            <span>{pkg.count} bookings</span>
+                            <span>{pct}%</span>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               </div>
 
-              {stats.monthlyRevenue.length > 0 && (
-                <div className="card-dark p-6">
-                  <h3 className="heading-panel mb-5">Monthly Revenue</h3>
+              <div className="card-dark p-6">
+                <h3 className="heading-panel mb-5">Monthly Revenue</h3>
+                {stats.monthlyRevenue.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] px-6 py-12 text-center">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.02] text-white/25">
+                      <BarChart3 className="h-6 w-6" />
+                    </div>
+                    <h4 className="mb-1 text-base font-semibold text-white/70">No revenue data yet</h4>
+                    <p className="text-sm text-white/35">Monthly totals will appear here once bookings are paid</p>
+                  </div>
+                ) : (
                   <div className="flex h-40 items-end gap-3">
                     {stats.monthlyRevenue.map((m) => {
                       const maxRevenue = Math.max(...stats.monthlyRevenue.map((r) => r.revenue));
@@ -446,8 +477,8 @@ function AdminPageContent() {
                       );
                     })}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 
@@ -499,7 +530,7 @@ function AdminPageContent() {
                         </td>
                         <td className="px-5 py-4">
                           <span
-                            className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium ${
+                            className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium ${
                               b.status === 'confirmed'
                                 ? 'border-white/25 bg-white/10 text-white'
                                 : b.status === 'cancelled'
@@ -516,10 +547,10 @@ function AdminPageContent() {
                           <select
                             value={b.status}
                             onChange={(e) => updateBookingStatus(b._id, e.target.value)}
-                            className="cursor-pointer rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-white/60 outline-none focus:border-zinc-500/30"
+                            className="cursor-pointer rounded border border-white/10 bg-white/5 px-2 py-2 text-xs text-white/60 focus:border-zinc-500/30 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                           >
                             {['pending', 'confirmed', 'completed', 'cancelled'].map((s) => (
-                              <option key={s} value={s} className="bg-[#0a0a0a]">
+                              <option key={s} value={s} className="bg-surface">
                                 {s}
                               </option>
                             ))}

@@ -90,7 +90,7 @@ export default function Packages() {
                 className={`card-package flex h-full flex-col ${isPopular ? 'popular md:-mt-2 md:mb-2 lg:-mt-4 lg:mb-4' : ''}`}
               >
                 <div
-                  className={`h-1 rounded-t-3xl ${
+                  className={`h-1 rounded-t-xl ${
                     isPopular
                       ? 'bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-300'
                       : 'bg-gradient-to-r from-zinc-700 to-zinc-500'
@@ -113,7 +113,7 @@ export default function Packages() {
                       <p className="mt-0.5 text-sm text-white/40">{pkg.tagline}</p>
                     </div>
                     {isPopular && (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-500/20 bg-zinc-500/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-500/20 bg-zinc-500/10">
                         <Zap className="h-5 w-5 text-zinc-400" />
                       </div>
                     )}
@@ -125,7 +125,7 @@ export default function Packages() {
                       <span className="text-sm text-white/30">/session</span>
                     </div>
                     <p className="mt-1.5 flex items-center gap-1 text-xs text-white/40">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-zinc-500/60" />
+                      <span className="inline-block h-1.5 w-1.5 rounded bg-zinc-500/60" />
                       Weekends from ₹{pkg.weekendPrice.toLocaleString('en-IN')}
                     </p>
                     <p className="mt-1 text-sm text-white/50">{pkg.duration}</p>
@@ -148,13 +148,13 @@ export default function Packages() {
                     ))}
                   </ul>
 
-                  <div className="glass mb-6 rounded-xl p-3">
+                  <div className="glass mb-6 rounded-lg p-3">
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/40">You&apos;ll receive:</p>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {pkg.deliverables.map((d) => (
                         <span
                           key={d}
-                          className="glass-gold rounded-md border border-zinc-500/10 px-2 py-0.5 text-xs text-zinc-400/80"
+                          className="glass-gold rounded border border-zinc-500/10 px-2 py-0.5 text-xs text-zinc-400/80"
                         >
                           {d}
                         </span>
@@ -166,7 +166,7 @@ export default function Packages() {
                     <button
                       type="button"
                       onClick={() => handleBookNow(pkgId)}
-                      className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 sm:min-h-12 ${
+                      className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:min-h-12 ${
                         isPopular
                           ? 'btn-primary'
                           : 'border border-zinc-500/30 text-zinc-400 hover:scale-[1.02] hover:border-zinc-500/50 hover:bg-zinc-500/10 active:scale-[0.98]'
@@ -178,7 +178,7 @@ export default function Packages() {
                     <button
                       type="button"
                       onClick={() => handleAddToCart(pkgId)}
-                      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/6 px-6 py-3 text-sm font-medium text-white/40 transition-all duration-200 hover:border-white/12 hover:text-white/70"
+                      className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-6 py-3 text-sm font-medium text-white/40 transition-all duration-200 hover:border-white/12 hover:text-white/70 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                     >
                       <ShoppingCart className="h-4 w-4" />
                       Add to Cart

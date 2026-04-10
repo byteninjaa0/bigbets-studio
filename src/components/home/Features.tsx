@@ -23,7 +23,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative bg-[#0a0a0a] py-12 md:py-20">
+    <section className="relative bg-surface py-12 md:py-20">
       <PageContainer>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -51,7 +51,7 @@ export default function Features() {
           className="mb-10 md:mb-14"
         >
           <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">Kit we run</p>
-          <ul className="mx-auto flex max-w-2xl list-none flex-col items-stretch gap-2.5 sm:max-w-3xl sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2">
+          <ul className="mx-auto flex max-w-2xl list-none flex-col items-stretch gap-3 sm:max-w-3xl sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2">
             {siteConfig.equipmentDetails.map((item) => (
               <li key={item} className="w-full min-w-0 sm:w-auto sm:max-w-[calc(100%-0.5rem)]">
                 <span className="flex min-h-[2.75rem] w-full items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/80 px-4 py-2.5 text-center text-xs leading-snug text-zinc-300 sm:min-h-0 sm:inline-flex sm:rounded-full sm:px-3.5 sm:py-2">

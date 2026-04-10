@@ -7,7 +7,7 @@ export const PACKAGES = {
     weekendPrice: 3000,
     duration: '1 Hour',
     color: 'from-zinc-800 to-zinc-900',
-    accentColor: '#fafafa',
+    accentColor: 'var(--color-primary)',
     badge: null,
     features: [
       '1-Hour Podcast Recording',
@@ -31,7 +31,7 @@ export const PACKAGES = {
     weekendPrice: 6000,
     duration: '1 Hour + Editing',
     color: 'from-zinc-800 to-zinc-950',
-    accentColor: '#e4e4e7',
+    accentColor: 'var(--color-zinc-200)',
     badge: 'TRENDING',
     features: [
       'Everything in SET A',
@@ -57,7 +57,7 @@ export const PACKAGES = {
     weekendPrice: 7500,
     duration: '1 Hour + Full Edit',
     color: 'from-stone-800 to-stone-900',
-    accentColor: '#a1a1aa',
+    accentColor: 'var(--color-text-secondary)',
     badge: 'PREMIUM',
     features: [
       'Everything in SET B',

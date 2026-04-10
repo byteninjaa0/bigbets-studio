@@ -153,7 +153,7 @@ export function MockPaymentModal({
         >
           <button
             type="button"
-            className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/75 backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             aria-label="Close"
             onClick={() => phase !== 'processing' && onOpenChange(false)}
           />
@@ -161,7 +161,7 @@ export function MockPaymentModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="checkout-payment-title"
-            className="relative w-full max-w-md rounded-3xl border border-white/[0.08] bg-zinc-950/95 shadow-2xl shadow-black/60 overflow-hidden"
+            className="relative w-full max-w-md rounded-xl border border-white/[0.08] bg-zinc-950/95 shadow-2xl shadow-black/60 overflow-hidden"
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
@@ -175,7 +175,7 @@ export function MockPaymentModal({
                 <button
                   type="button"
                   onClick={() => onOpenChange(false)}
-                  className="rounded-xl p-2 text-white/40 hover:text-white hover:bg-white/5 transition-colors"
+                  className="rounded-lg p-2 text-white/40 hover:text-white hover:bg-white/5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -193,23 +193,23 @@ export function MockPaymentModal({
                     className="space-y-5"
                   >
                     {modalNotice ? (
-                      <p className="text-xs text-white/35 leading-relaxed border border-white/[0.06] rounded-2xl px-4 py-3 bg-white/[0.02]">
+                      <p className="text-xs text-white/35 leading-relaxed border border-white/[0.06] rounded-xl px-4 py-3 bg-white/[0.02]">
                         {modalNotice}
                       </p>
                     ) : null}
 
-                    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 space-y-3">
+                    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 space-y-3">
                       {[
                         { icon: Package, label: 'Package', value: packageName },
                         { icon: Calendar, label: 'Date', value: formattedDate },
                         { icon: Clock, label: 'Time', value: formattedTime },
                       ].map(({ icon: Icon, label, value }) => (
                         <div key={label} className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                          <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                             <Icon className="w-4 h-4 text-zinc-500" />
                           </div>
                           <div>
-                            <p className="text-[10px] uppercase tracking-wider text-white/35">{label}</p>
+                            <p className="text-xs uppercase tracking-wider text-white/35">{label}</p>
                             <p className="text-sm font-medium text-white/90">{value}</p>
                           </div>
                         </div>
@@ -221,7 +221,7 @@ export function MockPaymentModal({
                         <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
                       </div>
                     ) : quoteError ? (
-                      <div className="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-200/90">
+                      <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-200/90">
                         {quoteError}
                       </div>
                     ) : (
@@ -253,7 +253,7 @@ export function MockPaymentModal({
                           type="checkbox"
                           checked={simulateFailure}
                           onChange={(e) => setSimulateFailure(e.target.checked)}
-                          className="rounded border-zinc-600 bg-zinc-900"
+                          className="rounded border-zinc-600 bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                         />
                         Simulate payment failure (dev)
                       </label>
@@ -263,7 +263,7 @@ export function MockPaymentModal({
                       type="button"
                       disabled={quoteLoading || amount === null || quoteError !== null}
                       onClick={handlePay}
-                      className="w-full flex items-center justify-center gap-2 rounded-2xl bg-white text-black font-bold py-4 text-base hover:bg-zinc-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-white text-black font-bold py-4 text-base hover:bg-zinc-200 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <CreditCard className="w-5 h-5" />
                       Pay ₹{displayTotal.toLocaleString('en-IN')}
@@ -296,7 +296,7 @@ export function MockPaymentModal({
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: 'spring', stiffness: 260, damping: 16 }}
-                      className="w-16 h-16 rounded-2xl bg-white text-black flex items-center justify-center mb-5"
+                      className="w-16 h-16 rounded-lg bg-white text-black flex items-center justify-center mb-5"
                     >
                       <CheckCircle2 className="w-9 h-9" />
                     </motion.div>
@@ -312,7 +312,7 @@ export function MockPaymentModal({
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-col items-center py-10 text-center space-y-5"
                   >
-                    <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-700 flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-lg bg-zinc-900 border border-zinc-700 flex items-center justify-center">
                       <AlertCircle className="w-7 h-7 text-zinc-400" />
                     </div>
                     <div>
@@ -322,7 +322,7 @@ export function MockPaymentModal({
                     <button
                       type="button"
                       onClick={handleRetry}
-                      className="w-full rounded-2xl border border-white/15 text-white py-3.5 text-sm font-semibold hover:bg-white/5 transition-colors"
+                      className="w-full rounded-lg border border-white/15 text-white py-3.5 text-sm font-semibold hover:bg-white/5 transition-colors focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                     >
                       Try again
                     </button>

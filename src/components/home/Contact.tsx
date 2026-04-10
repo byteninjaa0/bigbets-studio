@@ -88,7 +88,7 @@ export default function Contact() {
                     <a
                       href={row.href}
                       {...(row.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="text-white/85 text-sm hover:text-white transition-colors duration-200 break-words"
+                      className="text-white/85 text-sm hover:text-white transition-colors duration-200 break-words focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                     >
                       {row.value}
                     </a>
@@ -107,7 +107,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.35 }}
-              className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-700 bg-zinc-950/50 hover:bg-zinc-900 hover:border-zinc-600 transition-all duration-300 group"
+              className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-700 bg-zinc-950/50 hover:bg-zinc-900 hover:border-zinc-600 transition-all duration-300 group focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             >
               <div className="w-11 h-11 rounded-xl bg-zinc-800 flex items-center justify-center border border-zinc-700">
                 <MessageCircle className="w-5 h-5 text-white" />

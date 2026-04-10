@@ -295,7 +295,7 @@ function SignInPageInner() {
                   aria-label="One-time code"
                 >
                   {/* Single row: grid avoids flex-wrap pushing digits to a second line on narrow viewports */}
-                  <div className="grid w-full grid-cols-6 gap-1.5 sm:mx-auto sm:max-w-[21rem] sm:gap-2">
+                  <div className="grid w-full grid-cols-6 gap-2 sm:mx-auto sm:max-w-[21rem] sm:gap-2">
                     {otp.map((digit, i) => (
                       <input
                         key={i}
@@ -349,7 +349,7 @@ function SignInPageInner() {
                     type="button"
                     disabled={resendCooldown > 0 || sending || verifying}
                     onClick={sendOtp}
-                    className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 text-zinc-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${sending ? 'animate-spin' : ''}`} />
                     {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}

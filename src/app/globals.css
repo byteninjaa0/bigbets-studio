@@ -1,3 +1,5 @@
+@import '../styles/tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -249,6 +251,12 @@
 
 .btn-ghost:hover {
   @apply bg-zinc-900 text-white;
+}
+
+.focus-ring {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Cards */

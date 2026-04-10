@@ -48,7 +48,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="relative bg-[#0a0a0a] py-12 md:py-20">
+    <section className="relative bg-surface py-12 md:py-20">
       <PageContainer>
         <div className="mx-auto max-w-3xl">
         <motion.div
@@ -81,7 +81,7 @@ export default function FAQ() {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left"
+                className="w-full flex items-center justify-between p-5 text-left focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
               >
                 <span
                   className={`pr-2 text-left text-sm font-semibold transition-colors duration-200 sm:text-base ${

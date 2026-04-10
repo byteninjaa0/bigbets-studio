@@ -36,6 +36,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
   const [selectedSlot, setSelectedSlot] = useState('');
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsError, setSlotsError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const pkg = packageId ? PACKAGES[packageId as keyof typeof PACKAGES] : null;
@@ -45,6 +46,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
     setSelectedSlot('');
     setSlots([]);
     setSlotsLoading(false);
+    setSlotsError(null);
     setSubmitting(false);
   }, []);
 
@@ -63,18 +65,23 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
 
   const fetchSlots = useCallback(async (date: Date) => {
     setSlotsLoading(true);
+    setSlotsError(null);
     setSelectedSlot('');
     try {
       const dateStr = format(date, 'yyyy-MM-dd');
       const { data } = await axios.get(`/api/slots?date=${dateStr}`);
       if (data?.success === false) {
-        toast.error(apiMessage(data, 'Failed to load slots.'));
+        const message = apiMessage(data, 'Failed to load slots.');
+        toast.error(message);
+        setSlotsError(message);
         setSlots([]);
         return;
       }
       setSlots(Array.isArray(data?.slots) ? data.slots : []);
     } catch {
-      toast.error('Failed to load slots.');
+      const message = 'Failed to load slots.';
+      toast.error(message);
+      setSlotsError(message);
       setSlots([]);
     } finally {
       setSlotsLoading(false);
@@ -159,7 +166,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
         >
           <button
             type="button"
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
             aria-label="Close"
             onClick={() => onOpenChange(false)}
           />
@@ -168,7 +175,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="relative z-10 flex max-h-[min(92vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-white/10 bg-zinc-950 shadow-2xl sm:rounded-3xl"
+            className="relative z-10 flex max-h-[min(92vh,720px)] w-full max-w-lg flex-col overflow-hidden rounded-t-xl border border-white/10 bg-zinc-950 shadow-2xl sm:rounded-xl"
           >
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <h2 id="add-cart-title" className="heading-dialog text-lg sm:text-xl">
@@ -177,7 +184,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-white hover:bg-white/10"
+                className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" />
@@ -210,14 +217,14 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                         caption_label: 'rdp-caption_label !text-sm font-semibold text-white',
                         nav: 'rdp-nav',
                         nav_button:
-                          'rdp-nav_button !h-8 !w-8 rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white',
+                          'rdp-nav_button !h-8 !w-8 rounded text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
                         nav_button_previous: 'rdp-nav_button_previous',
                         nav_button_next: 'rdp-nav_button_next',
                         table: 'rdp-table w-full border-collapse',
                         head: 'rdp-head',
                         head_row: 'rdp-head_row',
                         head_cell:
-                          'rdp-head_cell !h-9 !w-9 text-center text-[10px] font-semibold uppercase tracking-wide text-white/35',
+                          'rdp-head_cell !h-9 !w-9 text-center text-xs font-semibold uppercase tracking-wide text-white/35',
                         tbody: 'rdp-tbody',
                         row: 'rdp-row',
                         cell: 'rdp-cell !p-0',
@@ -242,6 +249,23 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                   <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
                     <Clock className="h-4 w-4 text-zinc-400" /> Time
                   </h3>
+                  {selectedDate && slotsError && (
+                    <div className="mb-3 rounded-lg border border-red-500/25 bg-red-500/10 px-3 py-2.5">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-300/90" />
+                        <div className="min-w-0">
+                          <p className="text-xs text-red-200/90">{slotsError}</p>
+                          <button
+                            type="button"
+                            onClick={() => void fetchSlots(selectedDate)}
+                            className="mt-2 text-xs font-medium text-red-200 underline decoration-red-300/70 underline-offset-2 hover:text-red-100 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+                          >
+                            Try again
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {!selectedDate ? (
                     <div className="flex h-40 flex-col items-center justify-center text-white/25">
                       <Calendar className="mb-2 h-10 w-10 opacity-30" />
@@ -257,14 +281,14 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                       <p className="text-xs">No slots this day</p>
                     </div>
                   ) : (
-                    <div className="grid max-h-52 grid-cols-2 gap-1.5 overflow-y-auto pr-1">
+                    <div className="grid max-h-52 grid-cols-2 gap-2 overflow-y-auto pr-1">
                       {slots.map((slot) => (
                         <button
                           key={slot.time}
                           type="button"
                           disabled={!slot.isAvailable}
                           onClick={() => setSelectedSlot(slot.time)}
-                          className={`slot-btn rounded-xl px-2 py-2 text-left text-xs ${
+                          className={`slot-btn rounded-lg px-2 py-2 text-left text-xs focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 ${
                             !slot.isAvailable ? 'booked' : selectedSlot === slot.time ? 'selected' : ''
                           }`}
                         >
@@ -277,7 +301,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
               </div>
 
               {selectedDate && selectedSlot && (
-                <div className="mt-4 rounded-xl border border-zinc-700 bg-zinc-900/50 px-4 py-3 text-sm text-white/70">
+                <div className="mt-4 rounded-lg border border-zinc-700 bg-zinc-900/50 px-4 py-3 text-sm text-white/70">
                   <span className="text-zinc-400">Price for this slot: </span>
                   <span className="font-semibold text-white">
                     ₹{getPackagePrice(pkg.id, selectedDate).toLocaleString('en-IN')}
@@ -291,7 +315,7 @@ export function AddPackageToCartModal({ packageId, open, onOpenChange, onAdded }
                 type="button"
                 disabled={!selectedDate || !selectedSlot || submitting}
                 onClick={handleAdd}
-                className="btn-primary flex w-full items-center justify-center gap-2 py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-40"
+                className="btn-primary flex w-full items-center justify-center gap-2 py-3.5 text-base focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <CheckCircle2 className="h-5 w-5" />}
                 Add to cart

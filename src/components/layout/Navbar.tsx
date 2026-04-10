@@ -71,18 +71,18 @@ export default function Navbar() {
 
   const desktopLinkClass = (href: string) =>
     cn(
-      'relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
+      'relative whitespace-nowrap rounded px-3 py-2 text-sm font-medium transition-all duration-200',
       'text-white/75 hover:text-white',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black',
+      'focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
       'after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-200 hover:after:scale-x-100',
       navItemIsActive(pathname, href) && 'text-white after:scale-x-100 after:bg-white'
     );
 
   const mobileLinkClass = (href: string) =>
     cn(
-      'block rounded-xl px-4 py-4 text-lg font-medium transition-colors duration-200',
+      'block rounded-lg px-4 py-4 text-lg font-medium transition-colors duration-200',
       'text-white/90 hover:bg-white/[0.08] hover:text-white',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-zinc-500',
+      'focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
       navItemIsActive(pathname, href) && 'bg-white/[0.08] text-white'
     );
 
@@ -105,9 +105,9 @@ export default function Navbar() {
             href="/"
             aria-label={`${siteConfig.name} home`}
             className={cn(
-              'group flex min-w-0 shrink-0 cursor-pointer items-center rounded-lg outline-none',
+              'group flex min-w-0 shrink-0 cursor-pointer items-center rounded',
               'transition-opacity duration-200 hover:opacity-90',
-              'focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950'
+              'focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2'
             )}
           >
             <span className="flex h-11 max-h-11 w-auto max-w-[min(12.5rem,calc(100vw-8.5rem))] items-center sm:h-12 sm:max-h-12 md:h-14 md:max-h-14 md:max-w-[17rem] lg:max-w-[19rem]">
@@ -140,11 +140,11 @@ export default function Navbar() {
             {sessionStatus === 'authenticated' && cartCount > 0 && (
               <Link
                 href="/booking"
-                className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-zinc-950 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 sm:h-11 sm:w-11"
+                className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-zinc-950 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:h-11 sm:w-11"
                 aria-label={`Cart, ${cartCount} session${cartCount !== 1 ? 's' : ''}`}
               >
                 <ShoppingCart className="h-5 w-5 text-zinc-200" />
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1.25rem] items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-black">
+                <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-white px-1 text-xs font-bold text-black">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               </Link>
@@ -155,12 +155,12 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen((v) => !v)}
-                  className="flex h-10 max-w-[11rem] items-center gap-2 rounded-xl border border-white/15 bg-zinc-950 px-2.5 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 sm:h-11 sm:px-3"
+                  className="flex h-10 max-w-[11rem] items-center gap-2 rounded-lg border border-white/15 bg-zinc-950 px-2.5 transition-all duration-200 hover:border-zinc-500 hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:h-11 sm:px-3"
                   aria-expanded={userMenuOpen}
                   aria-haspopup="menu"
                   aria-label="Account menu"
                 >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-zinc-400 to-zinc-600 text-xs font-bold text-black">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-zinc-400 to-zinc-600 text-xs font-bold text-black">
                     {session.user?.image ? (
                       <img src={session.user.image} alt="" className="h-full w-full object-cover" />
                     ) : (
@@ -185,19 +185,19 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 6, scale: 0.98 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full z-[60] mt-2 w-56 overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 shadow-2xl"
+                      className="absolute right-0 top-full z-[60] mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-zinc-950 shadow-2xl"
                       role="menu"
                     >
                       <div className="border-b border-white/10 px-4 py-3">
                         <p className="truncate text-sm font-semibold text-white">{session.user?.name}</p>
                         <p className="truncate text-xs text-zinc-400">{session.user?.email}</p>
                       </div>
-                      <div className="p-1.5">
+                      <div className="p-2">
                         <Link
                           href="/dashboard"
                           role="menuitem"
                           onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-200 transition-colors hover:bg-white/10 hover:text-white"
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-zinc-200 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                         >
                           <LayoutDashboard className="h-4 w-4" />
                           My Dashboard
@@ -207,7 +207,7 @@ export default function Navbar() {
                             href="/admin"
                             role="menuitem"
                             onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100"
+                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                           >
                             <Shield className="h-4 w-4" />
                             Admin Panel
@@ -221,7 +221,7 @@ export default function Navbar() {
                             clearCartStore();
                             signOut({ callbackUrl: '/' });
                           }}
-                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                         >
                           <LogOut className="h-4 w-4" />
                           Log out
@@ -234,7 +234,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/auth/signin"
-                className="hidden h-10 items-center justify-center rounded-xl border border-white/20 px-3 text-sm font-medium text-white transition-all duration-200 hover:border-zinc-400 hover:bg-zinc-900 sm:inline-flex sm:h-11 sm:px-4"
+                className="hidden h-10 items-center justify-center rounded-lg border border-white/20 px-3 text-sm font-medium text-white transition-all duration-200 hover:border-zinc-400 hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 sm:inline-flex sm:h-11 sm:px-4"
               >
                 Sign In
               </Link>
@@ -242,7 +242,7 @@ export default function Navbar() {
 
             <Link
               href="/booking"
-              className="hidden h-10 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-black transition-all duration-200 hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black md:inline-flex md:h-11 md:px-5"
+              className="hidden h-10 items-center justify-center rounded-lg bg-white px-4 text-sm font-semibold text-black transition-all duration-200 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 md:inline-flex md:h-11 md:px-5"
             >
               Book Now
             </Link>
@@ -250,7 +250,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/25 bg-black text-white shadow-[0_1px_0_rgba(255,255,255,0.06)] transition-all duration-200 hover:border-white/40 hover:bg-zinc-900 md:hidden"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-white/25 bg-black text-white shadow-[0_1px_0_rgba(255,255,255,0.06)] transition-all duration-200 hover:border-white/40 hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 md:hidden"
               aria-label="Open navigation menu"
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
@@ -270,7 +270,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[105] bg-black/85 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[105] bg-black/85 backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 md:hidden"
               aria-label="Close menu"
               onClick={closeMobile}
             />
@@ -292,7 +292,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={closeMobile}
-                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-white/15 text-white transition-colors hover:bg-white/10"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-white/15 text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   aria-label="Close navigation menu"
                 >
                   <X className="h-5 w-5" />
@@ -319,7 +319,7 @@ export default function Navbar() {
                     <Link
                       href="/booking"
                       onClick={closeMobile}
-                      className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-500/40 bg-zinc-900 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+                      className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-zinc-500/40 bg-zinc-900 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                     >
                       <ShoppingCart className="h-4 w-4" />
                       Cart ({cartCount})
@@ -328,14 +328,14 @@ export default function Navbar() {
                   <Link
                     href="/booking"
                     onClick={closeMobile}
-                    className="flex h-12 w-full cursor-pointer items-center justify-center rounded-xl bg-white text-base font-semibold text-black transition-all duration-200 hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    className="flex h-12 w-full cursor-pointer items-center justify-center rounded-lg bg-white text-base font-semibold text-black transition-all duration-200 hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                   >
                     Book Now
                   </Link>
                   {session?.user ? (
                     <>
-                      <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-zinc-950 px-4 py-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-zinc-400 to-zinc-600 text-sm font-bold text-black">
+                      <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-zinc-950 px-4 py-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-zinc-400 to-zinc-600 text-sm font-bold text-black">
                           {session.user.image ? (
                             <img src={session.user.image} alt="" className="h-full w-full object-cover" />
                           ) : (
@@ -350,7 +350,7 @@ export default function Navbar() {
                       <Link
                         href="/dashboard"
                         onClick={closeMobile}
-                        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-600 text-sm font-medium text-white transition-all hover:bg-zinc-900"
+                        className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-zinc-600 text-sm font-medium text-white transition-all hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         Dashboard
@@ -359,7 +359,7 @@ export default function Navbar() {
                         <Link
                           href="/admin"
                           onClick={closeMobile}
-                          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 text-sm font-medium text-zinc-300 hover:bg-zinc-900"
+                          className="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-zinc-700 text-sm font-medium text-zinc-300 hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                         >
                           <Shield className="h-4 w-4" />
                           Admin
@@ -372,7 +372,7 @@ export default function Navbar() {
                           clearCartStore();
                           signOut({ callbackUrl: '/' });
                         }}
-                        className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-zinc-800 text-sm font-medium text-zinc-400 hover:bg-zinc-900 hover:text-white"
+                        className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-zinc-800 text-sm font-medium text-zinc-400 hover:bg-zinc-900 hover:text-white focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                       >
                         <LogOut className="h-4 w-4" />
                         Log out
@@ -382,7 +382,7 @@ export default function Navbar() {
                     <Link
                       href="/auth/signin"
                       onClick={closeMobile}
-                      className="flex h-12 w-full items-center justify-center rounded-xl border border-zinc-600 text-sm font-medium text-white transition-all hover:bg-zinc-900"
+                      className="flex h-12 w-full items-center justify-center rounded-lg border border-zinc-600 text-sm font-medium text-white transition-all hover:bg-zinc-900 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
                     >
                       Sign In
                     </Link>

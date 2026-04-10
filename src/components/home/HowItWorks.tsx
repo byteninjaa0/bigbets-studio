@@ -49,7 +49,7 @@ export default function HowItWorks() {
                   >
                     <step.icon className="h-9 w-9 text-white" />
                   </div>
-                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-500/30 bg-[#111] font-sans text-xs font-black tabular-nums text-zinc-400">
+                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-500/30 bg-surface-raised font-sans text-xs font-black tabular-nums text-zinc-400">
                     {i + 1}
                   </span>
                 </div>
